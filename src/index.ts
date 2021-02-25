@@ -5,8 +5,6 @@ import glob from 'glob';
 import { parse } from 'path';
 import { RequestType, IEndpoint } from './models';
 
-const isProduction = process.env.NODE_ENV === "production";
-
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
  *
