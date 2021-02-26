@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -68,7 +68,7 @@
   "homepage": "https://github.com/llewellyncollins/firebase-backend#readme",
   "repository": "git://github.com/llewellyncollins/firebase-backend.git",
   "bugs": {
-      "url": "git+https://github.com/llewellyncollins/firebase-backend/issues"
+    "url": "git+https://github.com/llewellyncollins/firebase-backend/issues"
   },
   "author": "Llewellyn Collins <llewellyn.c.collins@gmail.com>",
   "auto": {
