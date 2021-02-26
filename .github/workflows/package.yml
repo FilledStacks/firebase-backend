@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
-          scope: "@llewellyn-collins"
+          scope: "@llewellyncollins"
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
