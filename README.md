@@ -6,9 +6,9 @@
 
 1. Add github npm registry to your .npmrc file
 ```
-registry=https://npm.pkg.github.com/@llewellyncollins
+registry=https://npm.pkg.github.com/@filledstacks
 registry=https://registry.npmjs.org
 ```
 
 2. Install package
-```npm install @llewellyncollins/firebase-backend```
+```npm install @filledstacks/firebase-backend```
