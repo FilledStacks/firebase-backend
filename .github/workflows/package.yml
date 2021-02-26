@@ -18,8 +18,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: https://npm.pkg.github.com/
-          scope: "@llewellyncollins"
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
@@ -27,5 +25,5 @@ jobs:
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: npm run release
