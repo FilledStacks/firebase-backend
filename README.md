@@ -1,6 +1,6 @@
 [![CI](https://github.com/llewellyncollins/firebase-backend/actions/workflows/main.yml/badge.svg)](https://github.com/llewellyncollins/firebase-backend/actions/workflows/main.yml)
 
-# Firebase Back-end
+# Firebase Backend
 
 ## Install
 
