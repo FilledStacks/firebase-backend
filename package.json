@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",
@@ -62,9 +62,6 @@
     "express": "^4.17.1",
     "firebase-functions": "^3.13.2",
     "glob": "^7.1.6"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   },
   "homepage": "https://github.com/filledstacks/firebase-backend#readme",
   "repository": "git://github.com/filledstacks/firebase-backend.git",
