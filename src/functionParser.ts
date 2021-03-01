@@ -19,7 +19,8 @@ export class FunctionParser {
     rootPath: string,
     exports: any,
     buildReactive: boolean = true,
-    buildEndpoints: boolean = true
+    buildEndpoints: boolean = true,
+    groupByFolder: boolean = true
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -27,17 +28,17 @@ export class FunctionParser {
     this.rootPath = rootPath;
     this.exports = exports;
     if (buildReactive) {
-      this.buildReactiveFunctions();
+      this.buildReactiveFunctions(groupByFolder);
     }
     if (buildEndpoints) {
-      this.buildRestfulApi();
+      this.buildRestfulApi(groupByFolder);
     }
   }
 
   /**
    * Looks for all files with .function.js and exports them on the group they belong to
    */
-  private buildReactiveFunctions() {
+  private buildReactiveFunctions(groupByFolder: boolean) {
     console.log('FunctionParser - Building reactive cloud functions ... ');
     // Get all the files that has .function in the file name
     const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
@@ -48,7 +49,14 @@ export class FunctionParser {
     for (let i = 0, fl = functionFiles.length; i < fl; i++) {
       const file = functionFiles[i];
       const filePath = parse(file);
-      const groupName = filePath.dir.split('/').pop() || 'noGroup';
+      const directories = filePath.dir.split('/');
+      let groupName: string = directories.pop() || '';
+
+      // Get second last folder name
+      if (groupByFolder) {
+        groupName = directories.pop() || '';
+      }
+
       const functionName = file.split('/')[3].slice(0, -12); // Strip off '.function.js'
 
       if (
@@ -76,7 +84,7 @@ export class FunctionParser {
   /**
    * Looks at all .endpoint.js files and adds them to the group they belong in
    */
-  private buildRestfulApi() {
+  private buildRestfulApi(groupByFolder: boolean) {
     console.log('FunctionParser - Building API endpoints... ');
     const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
@@ -89,7 +97,14 @@ export class FunctionParser {
     for (let f = 0, fl = apiFiles.length; f < fl; f++) {
       const file = apiFiles[f];
       const filePath = parse(file);
-      const groupName = filePath.dir.split('/').pop() || 'noGroup';
+      const directories = filePath.dir.split('/');
+      let groupName: string = directories.pop() || '';
+
+      // Get second last folder name
+      if (groupByFolder) {
+        groupName = directories.pop() || '';
+      }
+
       let router = groupRouters.get(groupName);
 
       if (!router) {
