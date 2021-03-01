@@ -34,7 +34,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@filledstacks/firebase-backend",
+  "name": "firebase-backend",
   "module": "dist/firebase-backend.esm.js",
   "size-limit": [
     {
