@@ -6,5 +6,5 @@
 ## Install
 
 ```
-npm install @filledstacks/firebase-backend
+npm install firebase-backend
 ```
