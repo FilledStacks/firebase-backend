@@ -13,7 +13,6 @@
 ## Requirements
 
 - node >=10
--
 
 ## Usage
 
