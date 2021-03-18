@@ -59,7 +59,7 @@ export class FunctionParser {
     console.log('FunctionParser - Building reactive cloud functions ... ');
     // Get all the files that has .function in the file name
     /** @type {*} */
-    const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
+    const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
@@ -109,12 +109,12 @@ export class FunctionParser {
   private buildRestfulApi(groupByFolder: boolean) {
     console.log('FunctionParser - Building API endpoints... ');
     /** @type {*} */
-    const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
+    const apiFiles: any = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
     /** @type {*} */
-    const app = express();
+    const app: any = express();
     /** @type {*} */
     const groupRouters: Map<string, express.Router> = new Map();
 
@@ -171,9 +171,9 @@ export class FunctionParser {
   private buildEndpoint(file: string, router: express.Router) {
     console.log(`buildEndpoint: ${file}`);
     /** @type {*} */
-    var endpoint = require(file).default as Endpoint;
+    var endpoint: any = require(file).default as Endpoint;
     /** @type {*} */
-    const name = endpoint.name;
+    const name: any = endpoint.name;
     /** @type {*} */
     var handler: any = endpoint.handler;
 
@@ -195,7 +195,7 @@ export class FunctionParser {
         break;
       default:
         throw new Error(
-          `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoing to the api.`
+          `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoint to the api.`
         );
     }
     console.log(
