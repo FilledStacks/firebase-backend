@@ -1,9 +1,10 @@
 import * as functions from 'firebase-functions';
-import bodyParser from 'body-parser';
 import express from 'express';
 import glob from 'glob';
 import { parse } from 'path';
 import { RequestType, Endpoint } from './models';
+
+const log = (message: string) => console.log(`FunctionParser: ${message}`);
 
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -56,7 +57,7 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
-    console.log('FunctionParser - Building reactive cloud functions ... ');
+    log('Reactive Functions - Building...');
     // Get all the files that has .function in the file name
     /** @type {*} */
     const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
@@ -64,39 +65,29 @@ export class FunctionParser {
       ignore: './node_modules/**',
     });
 
-    for (let i = 0, fl = functionFiles.length; i < fl; i++) {
-      const file = functionFiles[i];
+    functionFiles.forEach((file) => {
       const filePath = parse(file);
       const directories = filePath.dir.split('/');
-      let groupName: string = directories.pop() || '';
-
-      // Get second last folder name
-      if (groupByFolder) {
-        groupName = directories.pop() || '';
-      }
-
-      const functionName = file.split('/')[3].slice(0, -12); // Strip off '.function.js'
+      const groupName: string = groupByFolder
+        ? directories[directories.length - 2] || ''
+        : directories[directories.length - 1] || '';
+      const functionName = filePath.name.replace('.function', '');
 
       if (
         !process.env.FUNCTION_NAME ||
         process.env.FUNCTION_NAME === functionName
       ) {
-        if (!this.exports[groupName]) {
-          // This creates exports['orders']
-          this.exports[groupName] = {};
-        }
-
-        console.log(
-          `FunctionParser - Add reactive function ${functionName} to group ${groupName}`
-        );
+        if (!this.exports[groupName]) this.exports[groupName] = {};
+        log(`Reactive Functions - Added ${groupName}/${functionName}`);
 
         this.exports[groupName] = {
           ...this.exports[groupName],
           ...require(file),
         };
       }
-    }
-    console.log('FunctionParser - Reactive functions built successfully');
+    });
+
+    log('Reactive Functions - Built');
   }
 
   /**
@@ -107,7 +98,7 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildRestfulApi(groupByFolder: boolean) {
-    console.log('FunctionParser - Building API endpoints... ');
+    log('Restful Endpoints - Building...');
     /** @type {*} */
     const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
@@ -118,16 +109,12 @@ export class FunctionParser {
     /** @type {*} */
     const groupRouters: Map<string, express.Router> = new Map();
 
-    for (let f = 0, fl = apiFiles.length; f < fl; f++) {
-      const file = apiFiles[f];
+    apiFiles.forEach((file) => {
       const filePath = parse(file);
       const directories = filePath.dir.split('/');
-      let groupName: string = directories.pop() || '';
-
-      // Get second last folder name
-      if (groupByFolder) {
-        groupName = directories.pop() || '';
-      }
+      const groupName: string = groupByFolder
+        ? directories[directories.length - 2] || ''
+        : directories[directories.length - 1] || '';
 
       let router = groupRouters.get(groupName);
 
@@ -137,27 +124,22 @@ export class FunctionParser {
       }
 
       try {
-        this.buildEndpoint(file, router);
+        this.buildEndpoint(file, groupName, router);
       } catch (e) {
-        console.log(
-          `Failed to add the endpoint defined in ${file} to the ${groupName} Api. `,
-          e
-        );
-        throw new Error(
-          `Failed to add the endpoint defined in ${file} to the ${groupName} Api.`
-        );
+        const message = `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`;
+        log(message);
+        throw new Error(message);
       }
 
       app.use('/', router);
-      app.use(bodyParser.json());
-      app.use(bodyParser.urlencoded({ extended: false }));
 
       this.exports[groupName] = {
         ...this.exports[groupName],
         api: functions.https.onRequest(app),
       };
-    }
-    console.log('FunctionParser - Reactive functions built successfully...');
+    });
+
+    log('Restful Endpoints - Built');
   }
 
   /**
@@ -168,14 +150,18 @@ export class FunctionParser {
    * @param {express.Router} router
    * @memberof FunctionParser
    */
-  private buildEndpoint(file: string, router: express.Router) {
-    console.log(`buildEndpoint: ${file}`);
+  private buildEndpoint(
+    file: string,
+    groupName: string,
+    router: express.Router
+  ) {
+    const filePath = parse(file);
+    /** @type {*} */
+    const name = filePath.name.replace('.endpoint', '');
     /** @type {*} */
     var endpoint = require(file).default as Endpoint;
     /** @type {*} */
-    const name = endpoint.name;
-    /** @type {*} */
-    var handler: any = endpoint.handler;
+    var handler = endpoint.handler;
 
     switch (endpoint.requestType) {
       case RequestType.GET:
@@ -198,8 +184,8 @@ export class FunctionParser {
           `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoing to the api.`
         );
     }
-    console.log(
-      `Added functionName: ${name} as ${endpoint.requestType} endpoint.`
+    log(
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
     );
   }
 }

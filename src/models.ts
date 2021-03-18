@@ -14,23 +14,40 @@ export interface IExpressHandler {
  * Stores the information to be used when creating a restful endpoint on the backend
  */
 export class Endpoint {
-  name: string;
-  handler: Function;
+  handler: IExpressHandler;
   requestType: RequestType;
 
-  constructor(
-    name: string,
-    requestType: RequestType,
-    handler: IExpressHandler
-  ) {
-    if (!name || name.length < 1) {
-      throw 'Please provide the endpoint name. Endpoint name cannot be blank.';
-    }
+  constructor(requestType: RequestType, handler: IExpressHandler) {
     if (!handler) {
       throw 'Please provide a endpoint request handler.';
     }
-    this.name = name;
     this.handler = handler;
     this.requestType = requestType;
+  }
+}
+
+export class Get extends Endpoint {
+  constructor(handler: IExpressHandler) {
+    super(RequestType.GET, handler);
+  }
+}
+export class Post extends Endpoint {
+  constructor(handler: IExpressHandler) {
+    super(RequestType.POST, handler);
+  }
+}
+export class Put extends Endpoint {
+  constructor(handler: IExpressHandler) {
+    super(RequestType.PUT, handler);
+  }
+}
+export class Delete extends Endpoint {
+  constructor(handler: IExpressHandler) {
+    super(RequestType.DELETE, handler);
+  }
+}
+export class Patch extends Endpoint {
+  constructor(handler: IExpressHandler) {
+    super(RequestType.PATCH, handler);
   }
 }
