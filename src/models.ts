@@ -1,3 +1,7 @@
+/**
+ * @export
+ * @enum {number}
+ */
 export enum RequestType {
   GET = 'GET',
   POST = 'POST',
@@ -6,18 +10,33 @@ export enum RequestType {
   PATCH = 'PATCH',
 }
 
+/**
+ * @export
+ * @interface IExpressHandler
+ */
 export interface IExpressHandler {
   (req: any, res: any): any;
 }
 
 /**
  * Stores the information to be used when creating a restful endpoint on the backend
+ *
+ * @export
+ * @class Endpoint
  */
 export class Endpoint {
   name: string;
   handler: Function;
   requestType: RequestType;
 
+  /**
+   * Creates an instance of Endpoint.
+   *
+   * @param {string} name
+   * @param {RequestType} requestType
+   * @param {IExpressHandler} handler
+   * @memberof Endpoint
+   */
   constructor(
     name: string,
     requestType: RequestType,

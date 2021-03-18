@@ -8,7 +8,7 @@
 
 > A package that helps with the management and expansion of a maintainable firebase backend
 
-### [Homepage](https://github.com/filledstacks/firebase-backend#readme)
+## [Homepage](https://github.com/filledstacks/firebase-backend#readme)
 
 ## Requirements
 

@@ -1,9 +1,9 @@
-import * as functions from 'firebase-functions';
 import bodyParser from 'body-parser';
 import express from 'express';
+import * as functions from 'firebase-functions';
 import glob from 'glob';
 import { parse } from 'path';
-import { RequestType, Endpoint } from './models';
+import { Endpoint, RequestType } from './models';
 
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -65,17 +65,21 @@ export class FunctionParser {
     });
 
     for (let i = 0, fl = functionFiles.length; i < fl; i++) {
-      const file = functionFiles[i];
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+      /** @type {*} */
+      const file: any = functionFiles[i];
+      /** @type {*} */
+      const filePath: any = parse(file);
+      /** @type {*} */
+      const directories: any = filePath.dir.split('/');
+      /** @type {*} */
       let groupName: string = directories.pop() || '';
 
       // Get second last folder name
       if (groupByFolder) {
         groupName = directories.pop() || '';
       }
-
-      const functionName = file.split('/')[3].slice(0, -12); // Strip off '.function.js'
+      /** @type {*} */
+      const functionName: any = file.split('/')[3].slice(0, -12); // Strip off '.function.js'
 
       if (
         !process.env.FUNCTION_NAME ||
@@ -115,21 +119,25 @@ export class FunctionParser {
     });
     /** @type {*} */
     const app: any = express();
-    /** @type {*} */
+    /** @type {Map<string, express.Router>} */
     const groupRouters: Map<string, express.Router> = new Map();
 
     for (let f = 0, fl = apiFiles.length; f < fl; f++) {
-      const file = apiFiles[f];
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+      /** @type {*} */
+      const file: any = apiFiles[f];
+      /** @type {*} */
+      const filePath: any = parse(file);
+      /** @type {*} */
+      const directories: any = filePath.dir.split('/');
+      /** @type {string} */
       let groupName: string = directories.pop() || '';
 
       // Get second last folder name
       if (groupByFolder) {
         groupName = directories.pop() || '';
       }
-
-      let router = groupRouters.get(groupName);
+      /** @type {*} */
+      let router: any = groupRouters.get(groupName);
 
       if (!router) {
         router = express.Router();
@@ -149,8 +157,14 @@ export class FunctionParser {
       }
 
       app.use('/', router);
+      // bodyParser is deprecated
       app.use(bodyParser.json());
-      app.use(bodyParser.urlencoded({ extended: false }));
+      // bodyParser is deprecated
+      app.use(
+        bodyParser.urlencoded({
+          extended: false,
+        })
+      );
 
       this.exports[groupName] = {
         ...this.exports[groupName],
