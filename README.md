@@ -1,5 +1,7 @@
 # firebase-backend
 
+[![CI](https://github.com/filledstacks/firebase-backend/actions/workflows/main.yml/badge.svg)](https://github.com/filledstacks/firebase-backend/actions/workflows/main.yml)
+[![Package](https://github.com/filledstacks/firebase-backend/actions/workflows/package.yml/badge.svg)](https://github.com/filledstacks/firebase-backend/actions/workflows/package.yml)
 [![Version](https://img.shields.io/npm/v/firebase-backend.svg)](https://www.npmjs.com/package/firebase-backend)
 ![Prerequisite](https://img.shields.io/badge/node-%3E%3D10-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -11,6 +13,13 @@
 ## Requirements
 
 - node >=10
+-
+
+## Usage
+
+```sh
+npm i firebase-backend
+```
 
 ## Install
 
