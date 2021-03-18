@@ -10,11 +10,24 @@ import { RequestType, Endpoint } from './models';
  *
  * It takes in exports and then adds the required groups and their functions to it for deployment
  * to the cloud functions server.
+ *
+ * @export
+ * @class FunctionParser
  */
 export class FunctionParser {
   rootPath: string;
   exports: any;
 
+  /**
+   * Creates an instance of FunctionParser.
+   *
+   * @param {string} rootPath
+   * @param {*} exports
+   * @param {boolean} [buildReactive=true]
+   * @param {boolean} [buildEndpoints=true]
+   * @param {boolean} [groupByFolder=true]
+   * @memberof FunctionParser
+   */
   constructor(
     rootPath: string,
     exports: any,
@@ -37,10 +50,15 @@ export class FunctionParser {
 
   /**
    * Looks for all files with .function.js and exports them on the group they belong to
+   *
+   * @private
+   * @param {boolean} groupByFolder
+   * @memberof FunctionParser
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
     console.log('FunctionParser - Building reactive cloud functions ... ');
     // Get all the files that has .function in the file name
+    /** @type {*} */
     const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
@@ -83,15 +101,21 @@ export class FunctionParser {
 
   /**
    * Looks at all .endpoint.js files and adds them to the group they belong in
+   *
+   * @private
+   * @param {boolean} groupByFolder
+   * @memberof FunctionParser
    */
   private buildRestfulApi(groupByFolder: boolean) {
     console.log('FunctionParser - Building API endpoints... ');
+    /** @type {*} */
     const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
+    /** @type {*} */
     const app = express();
-
+    /** @type {*} */
     const groupRouters: Map<string, express.Router> = new Map();
 
     for (let f = 0, fl = apiFiles.length; f < fl; f++) {
@@ -138,12 +162,19 @@ export class FunctionParser {
 
   /**
    * Parses a .endpoint.js file and sets the endpoint path on the provided router
+   *
+   * @private
+   * @param {string} file
+   * @param {express.Router} router
+   * @memberof FunctionParser
    */
   private buildEndpoint(file: string, router: express.Router) {
     console.log(`buildEndpoint: ${file}`);
+    /** @type {*} */
     var endpoint = require(file).default as Endpoint;
+    /** @type {*} */
     const name = endpoint.name;
-
+    /** @type {*} */
     var handler: any = endpoint.handler;
 
     switch (endpoint.requestType) {
