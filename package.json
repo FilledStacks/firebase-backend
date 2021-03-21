@@ -82,7 +82,8 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "jsxSingleQuote": true,
-    "quoteProps": "consistent"
+    "quoteProps": "consistent",
+    "endOfLine": "lf"
   },
   "husky": {
     "hooks": {
