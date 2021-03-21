@@ -27,7 +27,8 @@
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "release": "auto shipit"
+    "release": "auto shipit",
+    "format": "prettier 'src/**/*.ts' --write"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -48,6 +49,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "firebase-admin": "^9.5.0",
     "husky": "^5.1.3",
+    "prettier": "^2.2.1",
     "size-limit": "^4.10.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.1.0",
