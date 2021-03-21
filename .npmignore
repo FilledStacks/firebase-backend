@@ -1,0 +1,8 @@
+src/**
+etc/**
+*.lock
+coverage
+*.spec.js
+*.tgz
+.github
+*.ts
