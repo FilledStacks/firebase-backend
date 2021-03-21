@@ -58,27 +58,25 @@ export class FunctionParser {
   private buildReactiveFunctions(groupByFolder: boolean) {
     console.log('FunctionParser - Building reactive cloud functions ... ');
     // Get all the files that has .function in the file name
-    /** @type {*} */
     const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
 
     for (let i = 0, fl = functionFiles.length; i < fl; i++) {
-      /** @type {*} */
       const file: any = functionFiles[i];
-      /** @type {*} */
+
       const filePath: any = parse(file);
-      /** @type {*} */
+
       const directories: any = filePath.dir.split('/');
-      /** @type {*} */
+
       let groupName: string = directories.pop() || '';
 
       // Get second last folder name
       if (groupByFolder) {
         groupName = directories.pop() || '';
       }
-      /** @type {*} */
+
       const functionName: any = file.split('/')[3].slice(0, -12); // Strip off '.function.js'
 
       if (
@@ -112,31 +110,28 @@ export class FunctionParser {
    */
   private buildRestfulApi(groupByFolder: boolean) {
     console.log('FunctionParser - Building API endpoints... ');
-    /** @type {*} */
     const apiFiles: any = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
-    /** @type {*} */
     const app: any = express();
-    /** @type {Map<string, express.Router>} */
+
     const groupRouters: Map<string, express.Router> = new Map();
 
     for (let f = 0, fl = apiFiles.length; f < fl; f++) {
-      /** @type {*} */
       const file: any = apiFiles[f];
-      /** @type {*} */
+
       const filePath: any = parse(file);
-      /** @type {*} */
+
       const directories: any = filePath.dir.split('/');
-      /** @type {string} */
+
       let groupName: string = directories.pop() || '';
 
       // Get second last folder name
       if (groupByFolder) {
         groupName = directories.pop() || '';
       }
-      /** @type {*} */
+
       let router: any = groupRouters.get(groupName);
 
       if (!router) {
@@ -184,11 +179,8 @@ export class FunctionParser {
    */
   private buildEndpoint(file: string, router: express.Router) {
     console.log(`buildEndpoint: ${file}`);
-    /** @type {*} */
     var endpoint: any = require(file).default as Endpoint;
-    /** @type {*} */
     const name: any = endpoint.name;
-    /** @type {*} */
     var handler: any = endpoint.handler;
 
     switch (endpoint.requestType) {
