@@ -8,6 +8,17 @@
 
 > A package that helps with the management and expansion of a maintainable firebase backend
 
+- [firebase-backend](#firebase-backend)
+  - [Homepage](#homepage)
+  - [Requirements](#requirements)
+  - [Usage](#usage)
+  - [Install](#install)
+  - [Start](#start)
+  - [Test](#test)
+  - [Author](#author)
+  - [Contributing](#contributing)
+  - [License](#license)
+
 ## [Homepage](https://github.com/filledstacks/firebase-backend#readme)
 
 ## Requirements
