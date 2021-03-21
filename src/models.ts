@@ -45,9 +45,11 @@ export class Endpoint {
     if (!name || name.length < 1) {
       throw 'Please provide the endpoint name. Endpoint name cannot be blank.';
     }
+
     if (!handler) {
       throw 'Please provide a endpoint request handler.';
     }
+
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;

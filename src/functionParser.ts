@@ -38,11 +38,14 @@ export class FunctionParser {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }
+
     this.rootPath = rootPath;
     this.exports = exports;
+
     if (buildReactive) {
       this.buildReactiveFunctions(groupByFolder);
     }
+
     if (buildEndpoints) {
       this.buildRestfulApi(groupByFolder);
     }
@@ -57,6 +60,7 @@ export class FunctionParser {
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
     console.log('FunctionParser - Building reactive cloud functions ... ');
+
     // Get all the files that has .function in the file name
     const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
@@ -110,10 +114,12 @@ export class FunctionParser {
    */
   private buildRestfulApi(groupByFolder: boolean) {
     console.log('FunctionParser - Building API endpoints... ');
+
     const apiFiles: any = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
+
     const app: any = express();
 
     const groupRouters: Map<string, express.Router> = new Map();
@@ -179,8 +185,11 @@ export class FunctionParser {
    */
   private buildEndpoint(file: string, router: express.Router) {
     console.log(`buildEndpoint: ${file}`);
+
     var endpoint: any = require(file).default as Endpoint;
+
     const name: any = endpoint.name;
+
     var handler: any = endpoint.handler;
 
     switch (endpoint.requestType) {
@@ -201,7 +210,10 @@ export class FunctionParser {
         break;
       default:
         throw new Error(
-          `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoint to the api.`
+          `Unsupported requestType defined for endpoint. 
+          Please make sure that the endpoint file exports a RequestType
+          using the constants in src/system/constants/requests.ts.
+          We need this value to automatically add the endpoint to the api.`
         );
     }
     console.log(
