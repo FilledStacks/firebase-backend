@@ -156,10 +156,11 @@ export class FunctionParser {
     router: express.Router
   ) {
     const filePath = parse(file);
-    /** @type {*} */
-    const name = filePath.name.replace('.endpoint', '');
+
     /** @type {*} */
     var endpoint = require(file).default as Endpoint;
+    /** @type {*} */
+    const name = endpoint.name || filePath.name.replace('.endpoint', '');
     /** @type {*} */
     var handler = endpoint.handler;
 
