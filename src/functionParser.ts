@@ -67,7 +67,8 @@ export class FunctionParser {
       ignore: './node_modules/**',
     });
 
-    functionFiles.forEach((file) => {
+    //! TODO: Replace ...forEach(file: any) with correct type annotation
+    functionFiles.forEach((file: any) => {
       const filePath = parse(file);
       const directories = filePath.dir.split('/');
       const groupName: string = groupByFolder

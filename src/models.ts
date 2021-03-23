@@ -25,10 +25,6 @@ export interface IExpressHandler {
  * @class Endpoint
  */
 export class Endpoint {
-  name: string;
-  handler: Function;
-  requestType: RequestType;
-
   /**
    * Creates an instance of Endpoint.
    *
