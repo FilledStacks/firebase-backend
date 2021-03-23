@@ -25,7 +25,8 @@
     "lint": "eslint src/**/*.ts --cache",
     "lint:fix": "eslint src/**/*.ts --fix --cache",
     "format": "prettier 'src/**/*.ts' --write",
-    "docs": "npx typedoc --out docs src/index.ts"
+    "predocs": "rimraf docs",
+    "docs": "typedoc src/index.ts"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -44,8 +45,10 @@
     "eslint-plugin-import": "^2.22.1",
     "firebase-admin": "^9.5.0",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.1.0",
+    "typedoc": "^0.20.33",
     "typescript": "^4.2.3"
   },
   "prettier": {
