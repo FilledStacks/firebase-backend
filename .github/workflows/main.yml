@@ -1,36 +1,51 @@
-name: CI
+name: Ubuntu CI/CD
 
+# triggers
 on:
   push:
-    branches:
-      - main
+  pull_request:
+  workflow_dispatch:
+
 jobs:
   build:
-    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    name: Build, Test, and Lint
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node: ['10.x', '12.x', '14.x']
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    # runner os
+    runs-on: ubuntu-latest
 
+    # cache build deps
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Use Node ${{ matrix.node }}
-        uses: actions/setup-node@v2.1.5
+      - name: Cache
+      - uses: actions/cache@v2
         with:
-          node-version: ${{ matrix.node }}
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
+      # check out repo
+      - name: Checkout
+        uses: actions/checkout@master
 
+      # install node_modules
+      - name: Install
+        run: npm i
+
+      # build package
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      # test package
+      - name: Test
+        run: npm test
+
+      # lint package
       - name: Lint
         run: npm run lint
 
-      - name: Test
-        run: npm run test --ci --coverage --maxWorkers=2
-
-      - name: Build
-        run: npm run build
+      # archive production artifact for build step
+      - name: Archive
+        uses: actions/upload-artifact@master
+        with:
+          name: build-artifact
+          path: dist
