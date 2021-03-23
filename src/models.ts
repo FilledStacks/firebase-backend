@@ -1,3 +1,7 @@
+/**
+ * @export
+ * @enum {number}
+ */
 export enum RequestType {
   GET = 'GET',
   POST = 'POST',
@@ -6,14 +10,33 @@ export enum RequestType {
   PATCH = 'PATCH',
 }
 
+/**
+ * @export
+ * @interface IExpressHandler
+ */
 export interface IExpressHandler {
   (req: any, res: any): any;
 }
 
 /**
  * Stores the information to be used when creating a restful endpoint on the backend
+ *
+ * @export
+ * @class Endpoint
  */
 export class Endpoint {
+  name: string;
+  handler: Function;
+  requestType: RequestType;
+
+  /**
+   * Creates an instance of Endpoint.
+   *
+   * @param {string} name
+   * @param {RequestType} requestType
+   * @param {IExpressHandler} handler
+   * @memberof Endpoint
+   */
   constructor(
     /**
      * @deprecated "name" parameter is no longer needed
@@ -23,8 +46,13 @@ export class Endpoint {
     public handler: IExpressHandler
   ) {
     if (!handler) {
-      throw 'Please provide a endpoint request handler.';
+      throw new Error('Please provide a endpoint request handler.');
     }
+
+    this.name = name;
+    this.handler = handler;
+    this.requestType = requestType;
+  
   }
 }
 
@@ -51,5 +79,6 @@ export class Delete extends Endpoint {
 export class Patch extends Endpoint {
   constructor(handler: IExpressHandler) {
     super(undefined, RequestType.PATCH, handler);
+
   }
 }

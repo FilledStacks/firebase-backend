@@ -1,8 +1,8 @@
-import * as functions from 'firebase-functions';
 import express from 'express';
+import * as functions from 'firebase-functions';
 import glob from 'glob';
 import { parse } from 'path';
-import { RequestType, Endpoint } from './models';
+import { Endpoint, RequestType } from './models';
 
 const log = (message: string) => console.log(`FunctionParser: ${message}`);
 
@@ -39,11 +39,14 @@ export class FunctionParser {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }
+
     this.rootPath = rootPath;
     this.exports = exports;
+
     if (buildReactive) {
       this.buildReactiveFunctions(groupByFolder);
     }
+
     if (buildEndpoints) {
       this.buildRestfulApi(groupByFolder);
     }
@@ -57,13 +60,14 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
+
     log('Reactive Functions - Building...');
     // Get all the files that has .function in the file name
-    /** @type {*} */
-    const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
+    const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
+
 
     functionFiles.forEach((file) => {
       const filePath = parse(file);
@@ -98,16 +102,18 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildRestfulApi(groupByFolder: boolean) {
+
     log('Restful Endpoints - Building...');
     /** @type {*} */
     const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
-    /** @type {*} */
-    const app = express();
-    /** @type {*} */
+
+    const app: any = express();
+
     const groupRouters: Map<string, express.Router> = new Map();
+
 
     apiFiles.forEach((file) => {
       const filePath = parse(file);
@@ -116,7 +122,7 @@ export class FunctionParser {
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
 
-      let router = groupRouters.get(groupName);
+      let router: any = groupRouters.get(groupName);
 
       if (!router) {
         router = express.Router();
@@ -150,6 +156,7 @@ export class FunctionParser {
    * @param {express.Router} router
    * @memberof FunctionParser
    */
+
   private buildEndpoint(
     file: string,
     groupName: string,
@@ -163,7 +170,7 @@ export class FunctionParser {
     const name = endpoint.name || filePath.name.replace('.endpoint', '');
     /** @type {*} */
     var handler = endpoint.handler;
-
+      
     switch (endpoint.requestType) {
       case RequestType.GET:
         router.get(`/${name}`, handler);
@@ -182,7 +189,10 @@ export class FunctionParser {
         break;
       default:
         throw new Error(
-          `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoing to the api.`
+          `Unsupported requestType defined for endpoint. 
+          Please make sure that the endpoint file exports a RequestType
+          using the constants in src/system/constants/requests.ts.
+          We need this value to automatically add the endpoint to the api.`
         );
     }
     log(

@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    "coenraads.bracket-pair-colorizer-2",
+    "streetsidesoftware.code-spell-checker",
+    "naumovs.color-highlight",
+    "vivaxy.vscode-conventional-commits",
+    "redhat.fabric8-analytics",
+    "oouo-diogo-perdigao.docthis",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "ms-vscode.vscode-typescript-next",
+    "davidanson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense",
+    "esbenp.prettier-vscode",
+    "visualstudioexptteam.vscodeintellicode",
+    "webhint.vscode-webhint",
+    "redhat.vscode-yaml"
+  ]
+}

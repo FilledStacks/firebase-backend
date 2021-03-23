@@ -16,7 +16,7 @@
     // linter checks for common issues
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicative
+    // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicating
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     // use Node's module resolution algorithm, instead of the legacy TS one
@@ -30,6 +30,8 @@
     // error out if import and file system have a casing mismatch. Recommended by TS
     "forceConsistentCasingInFileNames": true,
     // `tsdx build` ignores this option, but it is commonly used when type-checking separately with `tsc`
-    "noEmit": true
+    "noEmit": true,
+    // remove comments for a smaller bundle
+    "removeComments": true
   }
 }
