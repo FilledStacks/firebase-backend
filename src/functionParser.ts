@@ -1,10 +1,21 @@
-import express from 'express';
+// functionParser.ts
+
+import express, { Application, Router } from 'express';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
+import { ParsedPath } from 'node:path';
 import { parse } from 'path';
-import { Endpoint, RequestType } from './models';
+import { IExpressHandler, Endpoint, RequestType } from './models';
 
-const log = (message: string) => console.log(`FunctionParser: ${message}`);
+/**
+ * console.log wrapper
+ *
+ * @param {string} message
+ * @return {void}
+ */
+function log(message: string): void {
+  return console.log(`FunctionParser: ${message}`);
+}
 
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -61,19 +72,25 @@ export class FunctionParser {
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
     log('Reactive Functions - Building...');
-    // Get all the files that has .function in the file name
-    const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
-      cwd: this.rootPath,
-      ignore: './node_modules/**',
-    });
 
-    //! TODO: Replace ...forEach(file: any) with correct type annotation
-    functionFiles.forEach((file: any) => {
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+    // Get all the files that has .function in the file name
+    const functionFiles: string[] = glob.sync(
+      `${this.rootPath}/**/*.function.js`,
+      {
+        cwd: this.rootPath,
+        ignore: './node_modules/**',
+      }
+    );
+
+    functionFiles.forEach((file: string) => {
+      const filePath: ParsedPath = parse(file);
+
+      const directories: string[] = filePath.dir.split('/');
+
       const groupName: string = groupByFolder
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
+
       const functionName = filePath.name.replace('.function', '');
 
       if (
@@ -102,35 +119,40 @@ export class FunctionParser {
    */
   private buildRestfulApi(groupByFolder: boolean) {
     log('Restful Endpoints - Building...');
-    /** @type {*} */
-    const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
+
+    const apiFiles: string[] = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
 
-    const app: any = express();
+    const app: Application = express();
 
     const groupRouters: Map<string, express.Router> = new Map();
 
-    apiFiles.forEach((file) => {
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+    apiFiles.forEach((file: string) => {
+      const filePath: ParsedPath = parse(file);
+
+      const directories: Array<string> = filePath.dir.split('/');
+
       const groupName: string = groupByFolder
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
 
-      let router: any = groupRouters.get(groupName);
+      let router: Router | undefined = groupRouters.get(groupName);
 
       if (!router) {
         router = express.Router();
+
         groupRouters.set(groupName, router);
       }
 
       try {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
-        const message = `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`;
+        const message: string = `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`;
+
         log(message);
+
         throw new Error(message);
       }
 
@@ -153,42 +175,46 @@ export class FunctionParser {
    * @param {express.Router} router
    * @memberof FunctionParser
    */
-
   private buildEndpoint(
     file: string,
     groupName: string,
     router: express.Router
   ) {
-    const filePath = parse(file);
+    const filePath: ParsedPath = parse(file);
 
-    /** @type {*} */
-    var endpoint = require(file).default as Endpoint;
-    /** @type {*} */
-    const name = endpoint.name || filePath.name.replace('.endpoint', '');
-    /** @type {*} */
-    var handler = endpoint.handler;
+    var endpoint: Endpoint = require(file).default as Endpoint;
+
+    const name: string =
+      endpoint.name || filePath.name.replace('.endpoint', '');
+
+    var handler: IExpressHandler = endpoint.handler;
 
     switch (endpoint.requestType) {
       case RequestType.GET:
         router.get(`/${name}`, handler);
         break;
+
       case RequestType.POST:
         router.post(`/${name}`, handler);
         break;
+
       case RequestType.PUT:
         router.put(`/${name}`, handler);
         break;
+
       case RequestType.DELETE:
         router.delete(`/${name}`, handler);
         break;
+
       case RequestType.PATCH:
         router.patch(`/${name}`, handler);
         break;
+
       default:
         throw new Error(
-          `Unsupported requestType defined for endpoint. 
+          `A Unsupported RequestType was defined for a endpoint.\n
           Please make sure that the endpoint file exports a RequestType
-          using the constants in src/system/constants/requests.ts.
+          using the constants in src/system/constants/requests.ts.\n
           We need this value to automatically add the endpoint to the api.`
         );
     }
