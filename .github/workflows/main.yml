@@ -22,13 +22,13 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v2
         with:
           node-version: [14.x, 15.x]
 
       # check out repo
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       # install node_modules
       - name: Install
@@ -50,7 +50,7 @@ jobs:
 
       # archive production artifact for build step
       - name: Archive
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: build-artifact
           path: dist
