@@ -16,7 +16,7 @@ jobs:
     # cache build deps
     steps:
       - name: Cache
-      - uses: actions/cache@v2
+        uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
