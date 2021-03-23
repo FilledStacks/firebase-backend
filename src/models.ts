@@ -52,7 +52,6 @@ export class Endpoint {
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;
-  
   }
 }
 
@@ -79,6 +78,5 @@ export class Delete extends Endpoint {
 export class Patch extends Endpoint {
   constructor(handler: IExpressHandler) {
     super(undefined, RequestType.PATCH, handler);
-
   }
 }

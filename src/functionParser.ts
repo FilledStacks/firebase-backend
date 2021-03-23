@@ -60,14 +60,12 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
-
     log('Reactive Functions - Building...');
     // Get all the files that has .function in the file name
     const functionFiles: any = glob.sync(`${this.rootPath}/**/*.function.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
-
 
     functionFiles.forEach((file) => {
       const filePath = parse(file);
@@ -102,7 +100,6 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildRestfulApi(groupByFolder: boolean) {
-
     log('Restful Endpoints - Building...');
     /** @type {*} */
     const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
@@ -113,7 +110,6 @@ export class FunctionParser {
     const app: any = express();
 
     const groupRouters: Map<string, express.Router> = new Map();
-
 
     apiFiles.forEach((file) => {
       const filePath = parse(file);
@@ -170,7 +166,7 @@ export class FunctionParser {
     const name = endpoint.name || filePath.name.replace('.endpoint', '');
     /** @type {*} */
     var handler = endpoint.handler;
-      
+
     switch (endpoint.requestType) {
       case RequestType.GET:
         router.get(`/${name}`, handler);
