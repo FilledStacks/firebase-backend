@@ -3,9 +3,8 @@
 import express, { Application, Router } from 'express';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
-import { ParsedPath } from 'node:path';
-import { parse } from 'path';
-import { IExpressHandler, Endpoint, RequestType } from './models';
+import { parse, ParsedPath } from 'path';
+import { Endpoint, RequestType } from './models';
 
 /**
  * console.log wrapper
@@ -27,9 +26,6 @@ function log(message: string): void {
  * @class FunctionParser
  */
 export class FunctionParser {
-  rootPath: string;
-  exports: any;
-
   /**
    * Creates an instance of FunctionParser.
    *
@@ -45,7 +41,7 @@ export class FunctionParser {
     exports: any,
     buildReactive: boolean = true,
     buildEndpoints: boolean = true,
-    groupByFolder: boolean = true
+    groupByFolder: boolean = true,
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -79,7 +75,7 @@ export class FunctionParser {
       {
         cwd: this.rootPath,
         ignore: './node_modules/**',
-      }
+      },
     );
 
     functionFiles.forEach((file: string) => {
@@ -178,16 +174,16 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router
+    router: express.Router,
   ) {
     const filePath: ParsedPath = parse(file);
 
-    var endpoint: Endpoint = require(file).default as Endpoint;
+    const endpoint: Endpoint = require(file).default as Endpoint;
 
     const name: string =
       endpoint.name || filePath.name.replace('.endpoint', '');
 
-    var handler: IExpressHandler = endpoint.handler;
+    const { handler } = endpoint;
 
     switch (endpoint.requestType) {
       case RequestType.GET:
@@ -215,11 +211,11 @@ export class FunctionParser {
           `A Unsupported RequestType was defined for a endpoint.\n
           Please make sure that the endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          We need this value to automatically add the endpoint to the api.`
+          We need this value to automatically add the endpoint to the api.`,
         );
     }
     log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
     );
   }
 }
