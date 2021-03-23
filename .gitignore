@@ -5,3 +5,4 @@ dist
 .env
 *.tgz
 .eslintcache
+docs

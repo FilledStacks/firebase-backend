@@ -24,7 +24,8 @@
     "test": "tsdx test --passWithNoTests",
     "lint": "eslint src/**/*.ts --cache",
     "lint:fix": "eslint src/**/*.ts --fix --cache",
-    "format": "prettier 'src/**/*.ts' --write"
+    "format": "prettier 'src/**/*.ts' --write",
+    "docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
     "express": "^4.17.1",
