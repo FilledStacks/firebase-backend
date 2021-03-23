@@ -1,5 +1,6 @@
 {
   /* Visit https://aka.ms/tsconfig.json to read more about this file */
+  "include": ["src"],
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                         /* Enable incremental compilation */
