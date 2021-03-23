@@ -26,6 +26,10 @@ function log(message: string): void {
  * @class FunctionParser
  */
 export class FunctionParser {
+  rootPath: string;
+
+  exports: any;
+
   /**
    * Creates an instance of FunctionParser.
    *
