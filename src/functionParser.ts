@@ -212,10 +212,10 @@ export class FunctionParser {
 
       default:
         throw new Error(
-          `A Unsupported RequestType was defined for a endpoint.\n
-          Please make sure that the endpoint file exports a RequestType
+          `A unsupported RequestType was defined for a Endpoint.\n
+          Please make sure that the Endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          We need this value to automatically add the endpoint to the api.`,
+          **This value is required to add the Endpoint to the API**`,
         );
     }
     log(
