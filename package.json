@@ -20,7 +20,6 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "prebuild": "rimraf dist docs",
     "build": "tsdx build --target node",
     "test": "tsdx test --passWithNoTests",
     "lint": "eslint src/**/*.ts --cache",
