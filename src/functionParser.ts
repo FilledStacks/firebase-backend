@@ -6,15 +6,8 @@ import glob from 'glob';
 import { parse, ParsedPath } from 'path';
 import { Endpoint, RequestType } from './models';
 
-/**
- * console.log wrapper
- *
- * @param {string} message
- * @return {void}
- */
-function log(message: string): void {
-  return console.log(`FunctionParser: ${message}`);
-}
+// enable short hand for console.log()
+const { log } = console;
 
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -149,11 +142,9 @@ export class FunctionParser {
       try {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
-        const message: string = `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`;
-
-        log(message);
-
-        throw new Error(message);
+        throw new Error(
+          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
+        );
       }
 
       app.use('/', router);
