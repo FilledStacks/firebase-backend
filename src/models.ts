@@ -1,3 +1,5 @@
+import { RuntimeOptions } from 'firebase-functions';
+
 /**
  * @export
  * @enum {number}
@@ -16,6 +18,10 @@ export enum RequestType {
  */
 export interface IExpressHandler {
   (req: any, res: any): any;
+}
+
+export interface EndpointOptions {
+  runWith: RuntimeOptions;
 }
 
 /**
@@ -43,7 +49,8 @@ export class Endpoint {
      */
     public name: string | undefined,
     public requestType: RequestType,
-    public handler: IExpressHandler
+    public handler: IExpressHandler,
+    public options?: EndpointOptions
   ) {
     if (!handler) {
       throw new Error('Please provide a endpoint request handler.');
@@ -52,33 +59,31 @@ export class Endpoint {
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;
-  
   }
 }
 
 export class Get extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.GET, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.GET, handler, options);
   }
 }
 export class Post extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.POST, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.POST, handler, options);
   }
 }
 export class Put extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.PUT, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.PUT, handler, options);
   }
 }
 export class Delete extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.DELETE, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.DELETE, handler, options);
   }
 }
 export class Patch extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.PATCH, handler);
-
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.PATCH, handler, options);
   }
 }
