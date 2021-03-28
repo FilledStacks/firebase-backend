@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 0.1.4
+
+- Adds a new shorthand recommended way to create RESTful endpoints
+- Adds shorthand way for exporting reactive functions
+- Adds some code chores. Improves the build time and package configs.
+- Updates readme to include detailed walk through of the package usage
+
 ## 0.1.3
 
 - Adds grouping by folder name
