@@ -1,3 +1,5 @@
+// models.ts
+
 /**
  * @export
  * @enum {number}
@@ -25,10 +27,6 @@ export interface IExpressHandler {
  * @class Endpoint
  */
 export class Endpoint {
-  name: string;
-  handler: Function;
-  requestType: RequestType;
-
   /**
    * Creates an instance of Endpoint.
    *
@@ -43,7 +41,7 @@ export class Endpoint {
      */
     public name: string | undefined,
     public requestType: RequestType,
-    public handler: IExpressHandler
+    public handler: IExpressHandler,
   ) {
     if (!handler) {
       throw new Error('Please provide a endpoint request handler.');
@@ -52,7 +50,6 @@ export class Endpoint {
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;
-  
   }
 }
 
@@ -79,6 +76,5 @@ export class Delete extends Endpoint {
 export class Patch extends Endpoint {
   constructor(handler: IExpressHandler) {
     super(undefined, RequestType.PATCH, handler);
-
   }
 }
