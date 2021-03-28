@@ -1,6 +1,6 @@
 {
   "name": "firebase-backend",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",
@@ -36,10 +36,10 @@
   "devDependencies": {
     "@types/express": "^4.17.11",
     "@types/glob": "^7.1.3",
-    "@types/node": "^14.14.35",
+    "@types/node": "^14.14.37",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
-    "eslint": "^7.22.0",
+    "eslint": "^7.23.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-import": "^2.22.1",
@@ -47,7 +47,7 @@
     "rimraf": "^3.0.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.1.0",
-    "typedoc": "^0.20.33",
+    "typedoc": "^0.20.34",
     "typescript": "^4.2.3"
   },
   "prettier": {
