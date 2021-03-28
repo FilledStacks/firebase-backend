@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.5
+
+- Code clean up and build improvements
 
 ## 0.1.4
 

@@ -1,5 +1,6 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
+  "name": "firebase-backend",
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",
@@ -60,6 +61,7 @@
     "arrowParens": "always",
     "jsxSingleQuote": true,
     "quoteProps": "consistent",
-    "endOfLine": "lf"
+    "endOfLine": 
+lf"
   }
 }
