@@ -1,10 +1,13 @@
-import * as functions from 'firebase-functions';
-import express from 'express';
-import glob from 'glob';
-import { parse } from 'path';
-import { RequestType, Endpoint } from './models';
+// functionParser.ts
 
-const log = (message: string) => console.log(`FunctionParser: ${message}`);
+import express, { Application, Router } from 'express';
+import * as functions from 'firebase-functions';
+import glob from 'glob';
+import { parse, ParsedPath } from 'path';
+import { Endpoint, RequestType } from './models';
+
+// enable short hand for console.log()
+const { log } = console;
 
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -17,6 +20,7 @@ const log = (message: string) => console.log(`FunctionParser: ${message}`);
  */
 export class FunctionParser {
   rootPath: string;
+
   exports: any;
 
   /**
@@ -34,16 +38,19 @@ export class FunctionParser {
     exports: any,
     buildReactive: boolean = true,
     buildEndpoints: boolean = true,
-    groupByFolder: boolean = true
+    groupByFolder: boolean = true,
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }
+
     this.rootPath = rootPath;
     this.exports = exports;
+
     if (buildReactive) {
       this.buildReactiveFunctions(groupByFolder);
     }
+
     if (buildEndpoints) {
       this.buildRestfulApi(groupByFolder);
     }
@@ -58,19 +65,25 @@ export class FunctionParser {
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
     log('Reactive Functions - Building...');
-    // Get all the files that has .function in the file name
-    /** @type {*} */
-    const functionFiles = glob.sync(`${this.rootPath}/**/*.function.js`, {
-      cwd: this.rootPath,
-      ignore: './node_modules/**',
-    });
 
-    functionFiles.forEach((file) => {
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+    // Get all the files that has .function in the file name
+    const functionFiles: string[] = glob.sync(
+      `${this.rootPath}/**/*.function.js`,
+      {
+        cwd: this.rootPath,
+        ignore: './node_modules/**',
+      },
+    );
+
+    functionFiles.forEach((file: string) => {
+      const filePath: ParsedPath = parse(file);
+
+      const directories: string[] = filePath.dir.split('/');
+
       const groupName: string = groupByFolder
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
+
       const functionName = filePath.name.replace('.function', '');
 
       if (
@@ -99,36 +112,39 @@ export class FunctionParser {
    */
   private buildRestfulApi(groupByFolder: boolean) {
     log('Restful Endpoints - Building...');
-    /** @type {*} */
-    const apiFiles = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
+
+    const apiFiles: string[] = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
       ignore: './node_modules/**',
     });
-    /** @type {*} */
-    const app = express();
-    /** @type {*} */
+
+    const app: Application = express();
+
     const groupRouters: Map<string, express.Router> = new Map();
 
-    apiFiles.forEach((file) => {
-      const filePath = parse(file);
-      const directories = filePath.dir.split('/');
+    apiFiles.forEach((file: string) => {
+      const filePath: ParsedPath = parse(file);
+
+      const directories: Array<string> = filePath.dir.split('/');
+
       const groupName: string = groupByFolder
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
 
-      let router = groupRouters.get(groupName);
+      let router: Router | undefined = groupRouters.get(groupName);
 
       if (!router) {
         router = express.Router();
+
         groupRouters.set(groupName, router);
       }
 
       try {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
-        const message = `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`;
-        log(message);
-        throw new Error(message);
+        throw new Error(
+          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
+        );
       }
 
       app.use('/', router);
@@ -153,40 +169,48 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router
+    router: express.Router,
   ) {
-    const filePath = parse(file);
+    const filePath: ParsedPath = parse(file);
 
-    /** @type {*} */
-    var endpoint = require(file).default as Endpoint;
-    /** @type {*} */
-    const name = endpoint.name || filePath.name.replace('.endpoint', '');
-    /** @type {*} */
-    var handler = endpoint.handler;
+    const endpoint: Endpoint = require(file).default as Endpoint;
+
+    const name: string =
+      endpoint.name || filePath.name.replace('.endpoint', '');
+
+    const { handler } = endpoint;
 
     switch (endpoint.requestType) {
       case RequestType.GET:
         router.get(`/${name}`, handler);
         break;
+
       case RequestType.POST:
         router.post(`/${name}`, handler);
         break;
+
       case RequestType.PUT:
         router.put(`/${name}`, handler);
         break;
+
       case RequestType.DELETE:
         router.delete(`/${name}`, handler);
         break;
+
       case RequestType.PATCH:
         router.patch(`/${name}`, handler);
         break;
+
       default:
         throw new Error(
-          `Unsupported requestType defined for endpoint. Please make sure that the endpoint file exports a RequestType using the constants in src/system/constants/requests.ts. We need this value to automatically add the endpoing to the api.`
+          `A unsupported RequestType was defined for a Endpoint.\n
+          Please make sure that the Endpoint file exports a RequestType
+          using the constants in src/system/constants/requests.ts.\n
+          **This value is required to add the Endpoint to the API**`,
         );
     }
     log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
     );
   }
 }

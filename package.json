@@ -3,34 +3,55 @@
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/firebase-backend.esm.js",
   "typings": "dist/index.d.ts",
+  "homepage": "https://github.com/filledstacks/firebase-backend#readme",
+  "repository": "git://github.com/filledstacks/firebase-backend.git",
+  "bugs": {
+    "url": "git+https://github.com/filledstacks/firebase-backend/issues"
+  },
+  "author": "FilledStacks <dane@filledstacks.com>",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=10"
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "tsdx build --target node",
     "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint src test",
-    "lint:fix": "tsdx lint src test --fix",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
-    "release": "auto shipit"
+    "lint": "eslint src/**/*.ts --cache",
+    "lint:fix": "eslint src/**/*.ts --fix --cache",
+    "format": "prettier 'src/**/*.ts' --write",
+    "predocs": "rimraf docs",
+    "docs": "typedoc src/index.ts"
   },
-  "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-functions": "^3.13.2",
+    "glob": "^7.1.6"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "@types/glob": "^7.1.3",
+    "@types/node": "^14.14.35",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typedoc": "^0.20.33",
+    "typescript": "^4.2.3"
   },
   "prettier": {
     "printWidth": 80,
-    "trailingComma": "es5",
+    "trailingComma": "all",
     "tabWidth": 2,
     "useTabs": false,
     "semi": true,
@@ -38,48 +59,7 @@
     "bracketSpacing": true,
     "arrowParens": "always",
     "jsxSingleQuote": true,
-    "quoteProps": "consistent"
-  },
-  "name": "firebase-backend",
-  "module": "dist/firebase-backend.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/firebase-backend.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/firebase-backend.esm.js",
-      "limit": "10 KB"
-    }
-  ],
-  "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.10.1",
-    "@types/express": "^4.17.11",
-    "@types/glob": "^7.1.3",
-    "auto": "^10.20.4",
-    "husky": "^5.1.3",
-    "size-limit": "^4.10.1",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.1.0",
-    "typescript": "^4.2.3"
-  },
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "firebase-functions": "^3.13.2",
-    "glob": "^7.1.6"
-  },
-  "homepage": "https://github.com/filledstacks/firebase-backend#readme",
-  "repository": "git://github.com/filledstacks/firebase-backend.git",
-  "bugs": {
-    "url": "git+https://github.com/filledstacks/firebase-backend/issues"
-  },
-  "author": "FilledStacks <dane@filledstacks.com>",
-  "auto": {
-    "plugins": [
-      "npm"
-    ],
-    "onlyPublishWithReleaseLabel": true,
-    "baseBranch": "main"
+    "quoteProps": "consistent",
+    "endOfLine": "lf"
   }
 }
