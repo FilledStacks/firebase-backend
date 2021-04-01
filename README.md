@@ -108,6 +108,7 @@ npm run serve
 This will build the TypeScript code and then serve the functions locally through the emulator. If this is successful you should see the following in the console. You should see the functions API has deployed (locally) a function at the following url
 
 ```sh
+
 http://localhost:5001/boxtout-fireship/us-central1/users-api
 ```
 
@@ -115,6 +116,7 @@ All the endpoints in the users resource group will be deployed under the `/user-
 
 ```json
 {
+
   "card_number": "5418754514815181",
   "card_holder": "FilledStacks"
 }
@@ -167,6 +169,7 @@ The way that the default TypeScript project is setup is not sufficient for consi
 
 ```ts
 npm install -D rimraf
+
 ```
 
 Then we'll add 2 new scripts into the `package.json` . Above the `build` script we'll add `clean` and `prebuild`.
@@ -188,6 +191,7 @@ Then we'll add 2 new scripts into the `package.json` . Above the `build` script 
 This will now clean out your generated code before building the new code.
 
 ### Deploy
+
 
 And finally we can deploy our backend. We first run `npm run build` when that's complete we run `npm run deploy` and that will push all the latest function code to your firebase project.
 
