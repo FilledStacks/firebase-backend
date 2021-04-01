@@ -1,3 +1,4 @@
+// models.ts
 import { RuntimeOptions } from 'firebase-functions';
 
 /**
@@ -31,10 +32,6 @@ export interface EndpointOptions {
  * @class Endpoint
  */
 export class Endpoint {
-  name: string;
-  handler: Function;
-  requestType: RequestType;
-
   /**
    * Creates an instance of Endpoint.
    *
