@@ -202,6 +202,15 @@ export class FunctionParser {
     log('Callable Functions - Built');
   }
 
+
+  /**
+   * Looks for all files with specified wildcard (.wildcard) and exports them on the group they belong to
+   *
+   * @private
+   * @param {boolean} groupByFolder
+   * @param {string} wildcard
+   * @memberof FunctionParser
+   */
   private buildFunctions(groupByFolder: boolean, wildcard: string) {
     // Get all the files that has wildcard in the file name
     const functionFiles: string[] = glob.sync(
