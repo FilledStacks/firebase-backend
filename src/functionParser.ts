@@ -38,6 +38,7 @@ export class FunctionParser {
     exports: any,
     buildReactive: boolean = true,
     buildEndpoints: boolean = true,
+    buildCallable: boolean = true,
     groupByFolder: boolean = true,
   ) {
     if (!rootPath) {
@@ -54,6 +55,10 @@ export class FunctionParser {
     if (buildEndpoints) {
       this.buildRestfulApi(groupByFolder);
     }
+
+    if(buildCallable){
+      this.buildCallableFunctions(groupByFolder);
+    }
   }
 
   /**
@@ -66,39 +71,7 @@ export class FunctionParser {
   private buildReactiveFunctions(groupByFolder: boolean) {
     log('Reactive Functions - Building...');
 
-    // Get all the files that has .function in the file name
-    const functionFiles: string[] = glob.sync(
-      `${this.rootPath}/**/*.function.js`,
-      {
-        cwd: this.rootPath,
-        ignore: './node_modules/**',
-      },
-    );
-
-    functionFiles.forEach((file: string) => {
-      const filePath: ParsedPath = parse(file);
-
-      const directories: string[] = filePath.dir.split('/');
-
-      const groupName: string = groupByFolder
-        ? directories[directories.length - 2] || ''
-        : directories[directories.length - 1] || '';
-
-      const functionName = filePath.name.replace('.function', '');
-
-      if (
-        !process.env.FUNCTION_NAME ||
-        process.env.FUNCTION_NAME === functionName
-      ) {
-        if (!this.exports[groupName]) this.exports[groupName] = {};
-        log(`Reactive Functions - Added ${groupName}/${functionName}`);
-
-        this.exports[groupName] = {
-          ...this.exports[groupName],
-          ...require(file),
-        };
-      }
-    });
+    this.buildFunctions(groupByFolder, '.function');
 
     log('Reactive Functions - Built');
   }
@@ -212,5 +185,56 @@ export class FunctionParser {
     log(
       `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
     );
+  }
+
+  /**
+   * Looks for all files with .callable.js and exports them on the group they belong to
+   *
+   * @private
+   * @param {boolean} groupByFolder
+   * @memberof FunctionParser
+   */
+   private buildCallableFunctions(groupByFolder: boolean) {
+    log('Callable Functions - Building...');
+
+    this.buildFunctions(groupByFolder, '.callable');
+
+    log('Callable Functions - Built');
+  }
+
+  private buildFunctions(groupByFolder: boolean, wildcard: string) {
+    // Get all the files that has wildcard in the file name
+    const functionFiles: string[] = glob.sync(
+      `${this.rootPath}/**/*${wildcard}.js`,
+      {
+        cwd: this.rootPath,
+        ignore: './node_modules/**',
+      },
+    );
+
+    functionFiles.forEach((file: string) => {
+      const filePath: ParsedPath = parse(file);
+
+      const directories: string[] = filePath.dir.split('/');
+
+      const groupName: string = groupByFolder
+        ? directories[directories.length - 2] || ''
+        : directories[directories.length - 1] || '';
+
+      const functionName = filePath.name.replace(wildcard, '');
+
+      if (
+        !process.env.FUNCTION_NAME ||
+        process.env.FUNCTION_NAME === functionName
+      ) {
+        if (!this.exports[groupName]) this.exports[groupName] = {};
+        log(`Added ${groupName}/${functionName}`);
+
+        this.exports[groupName] = {
+          ...this.exports[groupName],
+          ...require(file),
+        };
+      }
+    });
   }
 }

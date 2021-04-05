@@ -9,10 +9,20 @@
 
 - [firebase-backend](#firebase-backend)
   - [Requirements](#requirements)
-  - [Usage](#usage)
-  - [Install](#install)
-  - [Start](#start)
-  - [Test](#test)
+  - [Backend Overview](#backend-overview)
+    - [Types of Functions](#types-of-functions)
+    - [Code structure](#code-structure)
+  - [Code Setup](#code-setup)
+    - [Installation](#installation)
+    - [Configuration](#configuration)
+    - [Creating an Http Endpoint](#creating-an-http-endpoint)
+    - [Testing an Endpoint](#testing-an-endpoint)
+    - [Creating a Reactive Function](#creating-a-reactive-function)
+    - [Testing out a Reactive Function](#testing-out-a-reactive-function)
+    - [Creating a Callable Function](#creating-a-callable-function)
+    - [Testing out a Callable Function in Flutter](#testing-out-a-callable-function-in-flutter)
+    - [Environment improvement (This can also fit under Code Setup at the top)](#environment-improvement-this-can-also-fit-under-code-setup-at-the-top)
+    - [Deploy](#deploy)
   - [Author](#author)
   - [Contributing](#contributing)
   - [License](#license)
@@ -156,6 +166,34 @@ i  functions: Beginning execution of "users-onUserCreated"
 i  functions: Finished "users-onUserCreated" in ~1s
 >  User Created | send an email to dane@filledstacks.com
 ```
+
+### Creating a Callable Function
+
+Creating a callable function follows the same principles as a reactive function. First let us create a new folder in the users folder called `callable`. Inside that folder create a new file called `requestUserInformation.callable.ts`. As for reactive functions the `.callable` part is very important. It identifies what functions are loaded as callable functions.
+
+```tsx
+import * as function from "firebase-functions";
+
+exports.requestUserInformation = functions.https
+    .onCall((data, context) => {
+    // fetch all user information from the database
+    console.log(`fetching information for user ${context.uid}`);
+
+    return 'user_information';
+  });
+```
+
+Run `npm run build` and the callable functions will be build. When we run `firebase emulators:start` we can see the callables added under the api endpoint.
+
+### Testing out a Callable Function in Flutter
+
+You can call this function in Flutter via the [Cloud Functions](https://firebase.flutter.dev/docs/functions/overview) package.
+
+```dart
+FirebaseFunctions.instance.httpsCallable('users-requestUserInformation');
+```
+
+More info on how to work with callables can be find in the official [documentation](https://firebase.flutter.dev/docs/functions/usage#calling-endpoints).
 
 And that's it! You've created a reactive function as well as a http endpoint. Going further when you want to expand you backend you simply create a new file in the dedicated folder depending on the function type and it'll be added automatically. 
 
