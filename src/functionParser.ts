@@ -3,8 +3,9 @@
 import express, { Application, Router } from 'express';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
+import cors from 'cors';
 import { parse, ParsedPath } from 'path';
-import { Endpoint, RequestType } from './models';
+import { Endpoint, ParserOptions, RequestType } from './models';
 
 // enable short hand for console.log()
 const { log } = console;
@@ -21,6 +22,8 @@ const { log } = console;
 export class FunctionParser {
   rootPath: string;
 
+  enableCors: boolean;
+
   exports: any;
 
   /**
@@ -28,17 +31,13 @@ export class FunctionParser {
    *
    * @param {string} rootPath
    * @param {*} exports
-   * @param {boolean} [buildReactive=true]
-   * @param {boolean} [buildEndpoints=true]
-   * @param {boolean} [groupByFolder=true]
+   * @param {ParserOptions} [options]
    * @memberof FunctionParser
    */
   constructor(
     rootPath: string,
     exports: any,
-    buildReactive: boolean = true,
-    buildEndpoints: boolean = true,
-    groupByFolder: boolean = true,
+    options?: ParserOptions
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -46,6 +45,12 @@ export class FunctionParser {
 
     this.rootPath = rootPath;
     this.exports = exports;
+
+    // Set default option values for if not provided
+    this.enableCors = options?.enableCors ?? false;
+    let groupByFolder: boolean = options?.groupByFolder ?? true;
+    let buildReactive: boolean = options?.buildReactive ?? true;
+    let buildEndpoints: boolean = options?.buildEndpoints ?? true;
 
     if (buildReactive) {
       this.buildReactiveFunctions(groupByFolder);
@@ -179,6 +184,15 @@ export class FunctionParser {
       endpoint.name || filePath.name.replace('.endpoint', '');
 
     const { handler } = endpoint;
+
+    // Enable cors if it is enabled globally else only enable it for a particular route
+    if (this.enableCors) {
+      router.use(cors());
+    }
+    else if (endpoint.options?.enableCors) {
+      log(`Cors enabled for ${name}`);
+      router.use(cors());
+    }
 
     switch (endpoint.requestType) {
       case RequestType.GET:

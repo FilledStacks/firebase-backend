@@ -21,6 +21,25 @@ export interface IExpressHandler {
 }
 
 /**
+ * @export
+ * @interface ParserOptions
+ */
+export interface ParserOptions {
+  enableCors?: boolean;
+  buildReactive?: boolean;
+  buildEndpoints?: boolean;
+  groupByFolder?: boolean;
+}
+
+/**
+ * @export
+ * @interface EndpointOptions
+ */
+export interface EndpointOptions {
+  enableCors: boolean;
+}
+
+/**
  * Stores the information to be used when creating a restful endpoint on the backend
  *
  * @export
@@ -33,6 +52,7 @@ export class Endpoint {
    * @param {string} name
    * @param {RequestType} requestType
    * @param {IExpressHandler} handler
+   * @param {EndpointOptions} options
    * @memberof Endpoint
    */
   constructor(
@@ -42,6 +62,7 @@ export class Endpoint {
     public name: string | undefined,
     public requestType: RequestType,
     public handler: IExpressHandler,
+    public options?: EndpointOptions,
   ) {
     if (!handler) {
       throw new Error('Please provide a endpoint request handler.');
@@ -50,31 +71,32 @@ export class Endpoint {
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;
+    this.options = options;
   }
 }
 
 export class Get extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.GET, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.GET, handler, options);
   }
 }
 export class Post extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.POST, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.POST, handler, options);
   }
 }
 export class Put extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.PUT, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.PUT, handler, options);
   }
 }
 export class Delete extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.DELETE, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.DELETE, handler, options);
   }
 }
 export class Patch extends Endpoint {
-  constructor(handler: IExpressHandler) {
-    super(undefined, RequestType.PATCH, handler);
+  constructor(handler: IExpressHandler, options?: EndpointOptions) {
+    super(undefined, RequestType.PATCH, handler, options);
   }
 }

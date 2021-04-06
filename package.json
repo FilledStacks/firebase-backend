@@ -22,7 +22,6 @@
     "analyze": "size-limit --why",
     "release": "auto shipit"
   },
-  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -64,8 +63,11 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@types/cors": "^2.8.10",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "firebase-admin": "^9.6.0",
     "firebase-functions": "^3.13.2",
     "glob": "^7.1.6"
   },
