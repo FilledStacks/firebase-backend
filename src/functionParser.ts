@@ -149,13 +149,30 @@ export class FunctionParser {
 
       app.use('/', router);
 
+      // handle options
+      const options = this.getOptions(file);
+      const api = options?.runWith
+        ? functions.runWith(options.runWith).https.onRequest(app)
+        : functions.https.onRequest(app);
+
+      // attach to exports
       this.exports[groupName] = {
         ...this.exports[groupName],
-        api: functions.https.onRequest(app),
+        api,
       };
     });
 
     log('Restful Endpoints - Built');
+  }
+
+  /**
+   * Returns options object from endpoint file
+   * @param {string} file
+   * @returns Endpoint.options | undefined
+   * @memberof FunctionParser
+   */
+  private getOptions(file: string) {
+    return (require(file).default as Endpoint).options;
   }
 
   /**
