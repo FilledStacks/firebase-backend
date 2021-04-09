@@ -10,10 +10,11 @@ import { Endpoint, RequestType } from './models';
 const { log } = console;
 
 /**
- * This class helps with setting sup the exports for the cloud functions deployment.
+ * This class helps with setting up
+ * the exports for the cloud functions deployment.
  *
- * It takes in exports and then adds the required groups and their functions to it for deployment
- * to the cloud functions server.
+ * It takes in exports and then adds the required groups
+ * and their functions to it for deployment to the cloud functions server.
  *
  * @export
  * @class FunctionParser
@@ -57,7 +58,8 @@ export class FunctionParser {
   }
 
   /**
-   * Looks for all files with .function.js and exports them on the group they belong to
+   * Looks for all files with .function.js
+   * and exports them on the group they belong to
    *
    * @private
    * @param {boolean} groupByFolder
@@ -143,7 +145,8 @@ export class FunctionParser {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
         throw new Error(
-          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`
+          `Restful Endpoints - Failed to add the endpoint defined in
+          ${file} to the ${groupName} API.`
         );
       }
 
@@ -167,6 +170,7 @@ export class FunctionParser {
 
   /**
    * Returns options object from endpoint file
+   *
    * @param {string} file
    * @returns Endpoint.options | undefined
    * @memberof FunctionParser
@@ -176,7 +180,8 @@ export class FunctionParser {
   }
 
   /**
-   * Parses a .endpoint.js file and sets the endpoint path on the provided router
+   * Parses a .endpoint.js file
+   * and sets the endpoint path on the provided router
    *
    * @private
    * @param {string} file
