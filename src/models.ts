@@ -47,7 +47,7 @@ export class Endpoint {
     public name: string | undefined,
     public requestType: RequestType,
     public handler: IExpressHandler,
-    public options?: EndpointOptions,
+    public options?: EndpointOptions
   ) {
     if (!handler) {
       throw new Error('Please provide a endpoint request handler.');

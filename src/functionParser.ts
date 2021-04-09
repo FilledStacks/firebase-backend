@@ -38,7 +38,7 @@ export class FunctionParser {
     exports: any,
     buildReactive: boolean = true,
     buildEndpoints: boolean = true,
-    groupByFolder: boolean = true,
+    groupByFolder: boolean = true
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -72,7 +72,7 @@ export class FunctionParser {
       {
         cwd: this.rootPath,
         ignore: './node_modules/**',
-      },
+      }
     );
 
     functionFiles.forEach((file: string) => {
@@ -143,7 +143,7 @@ export class FunctionParser {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
         throw new Error(
-          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
+          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`
         );
       }
 
@@ -186,7 +186,7 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router,
+    router: express.Router
   ) {
     const filePath: ParsedPath = parse(file);
 
@@ -223,11 +223,11 @@ export class FunctionParser {
           `A unsupported RequestType was defined for a Endpoint.\n
           Please make sure that the Endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          **This value is required to add the Endpoint to the API**`,
+          **This value is required to add the Endpoint to the API**`
         );
     }
     log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
     );
   }
 }

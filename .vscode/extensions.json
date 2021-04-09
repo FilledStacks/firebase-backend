@@ -14,8 +14,16 @@
     "eg2.vscode-npm-script",
     "christian-kohler.npm-intellisense",
     "esbenp.prettier-vscode",
-    "visualstudioexptteam.vscodeintellicode",
     "webhint.vscode-webhint",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "mikestead.dotenv",
+    "wix.vscode-import-cost",
+    "hookyqr.minify",
+    "sonarsource.sonarlint-vscode",
+    "tabnine.tabnine-vscode",
+    "enkia.tokyo-night",
+    "visualstudioexptteam.vscodeintellicode",
+    "vscode-icons-team.vscode-icons",
+    "redhat.vscode-xml"
   ]
 }
