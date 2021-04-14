@@ -88,9 +88,9 @@ npm install firebase-backend
 Then you can open the index.ts file in your source folder and update it to
 
 ```ts
-import { FunctionParser } from 'firebase-backend'
+import { FunctionParser } from 'firebase-backend';
 
-exports = new FunctionParser(__dirname, exports).exports
+exports = new FunctionParser(__dirname, exports).exports;
 ```
 
 These are the two magical lines of code that allows us to dynamically add and
@@ -110,22 +110,22 @@ Inside that file we'll import `Request` and `Response` from express as well as
 export a new post endpoint with some made up logic.
 
 ```ts
-import { Request, Response } from 'express'
-import { Endpoint, RequestType } from 'firebase-backend'
+import { Request, Response } from 'express';
+import { Endpoint, RequestType } from 'firebase-backend';
 
 export default new Post((request: Request, response: Response) => {
   // Read the values out of the body
-  const cardNumber = request.body['card_number']
-  const cardHolder = request.body['card_holder']
+  const cardNumber = request.body['card_number'];
+  const cardHolder = request.body['card_holder'];
 
   // Do your thing with the values
-  var paymentToken = `${cardNumber}_${cardHolder}`
+  var paymentToken = `${cardNumber}_${cardHolder}`;
 
   // Send your response. 201 to indicate the creation of a new resource
   return response.status(201).send({
-    token: paymentToken
-  })
-})
+    token: paymentToken,
+  });
+});
 ```
 
 As you can see there's not a lot of code required to setup an endpoint. We
@@ -183,14 +183,14 @@ created in the firestore db. Create a new folder in the users folder called
 how we know which file to load as a reactive function.
 
 ```ts
-import * as functions from 'firebase-functions'
+import * as functions from 'firebase-functions';
 
 exports.onUserCreated = functions.firestore
   .document('users/{userId}')
   .onCreate((userSnapshot, context) => {
-    const data = userSnapshot.data()
-    console.log(`User Created | send an email to ${data.email}`)
-  })
+    const data = userSnapshot.data();
+    console.log(`User Created | send an email to ${data.email}`);
+  });
 ```
 
 Then we'll run `npm run build` in the functions folder. And after that we'll run

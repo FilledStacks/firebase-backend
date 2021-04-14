@@ -6,3 +6,4 @@ coverage
 *.tgz
 .github
 *.ts
+*.config.js
