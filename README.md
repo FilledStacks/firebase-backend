@@ -39,7 +39,9 @@ as the actual code structure.
 The backend is built around the strengths that firebase poses in their
 serverless cloud functions setup. Focussing on those strengths we can break the
 system into two types of functions (could also be called a micro-service if you
-choose to). Reactive and RESTul
+choose to).
+
+> Reactive & RESTul
 
 - **Reactive:** This is a function that will run in reaction to data or state
   updating on the backend. An example of this will be when a file is uploaded to
@@ -72,16 +74,16 @@ to go over.
 
 Organize your `firebase functions` folder into api domain folders (`groups`) and function type (`reactive`, `restful`).
 
-```
-src
-  {group_name_folder}
-    reactive
-      - onSomeTrigger.function.ts
-      - onSomeOtherTrigger.function.ts
-    restful
-      - someEndpointName.endpoint.ts
-      - someOtherEndpointName.endpoint.ts
-  - index.ts
+```sh
+src/
+  {group_name}/
+        reactive/
+            onSomeTrigger.function.ts
+            onSomeOtherTrigger.function.ts
+        restful/
+            someEndpointName.endpoint.ts
+            someOtherEndpointName.endpoint.ts
+  index.ts
 package.json
 ```
 
@@ -125,7 +127,8 @@ Let's say we wanted to make an endpoint where a client application could add a p
 ```ts
 // src/users/restful/addPaymentMethod.endpoint.ts
 import { Request, Response } from 'express';
-import { Post } from 'firebase-backend'; // Get, Post, Put, Update, Delete available
+// Get, Put, Update, and Delete also available
+import { Post } from 'firebase-backend';
 
 // Use the `Post` class which is extended from the `Endpoint` class.
 export default new Post((request: Request, response: Response) => {
@@ -163,7 +166,7 @@ http://localhost:5001/boxtout-fireship/us-central1/users-api
 All the endpoints in the users resource group will be deployed under the
 `/user-api` function. This means that we can make a post request to the endpoint
 with the expected data and check if we get back a result. I'm going to use
-[PostMan](https://www.postman.com/) to test this out. So we'll put in the above
+[Postman](https://www.postman.com/) to test this out. So we'll put in the above
 url and add `/addpaymentmethod` at the end of it. Select post as the HTTP
 request type and then pass in a body.
 
@@ -188,7 +191,7 @@ There we have it, your first endpoint created. Next up is reactive functions.
 
 **Create**
 
-Let's say we wanted to make a function that would run when the firestore db had a user record updated.
+Let's say we wanted to make a function that would run when the firestore database has a user record updated.
 
 - The API would be called `users`
 - The function would be called `onUserCreated`
@@ -265,7 +268,7 @@ we'll add `clean` and `prebuild`.
   }
 ```
 
-This will now clean out your generated code before building the new code.
+> This will now clean out your generated code before building the new code.
 
 ### Deploy
 
