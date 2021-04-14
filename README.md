@@ -16,10 +16,8 @@
   - [Code Setup](#code-setup)
     - [Installation](#installation)
     - [Configuration](#configuration)
-    - [Creating an Http Endpoint](#creating-an-http-endpoint)
-    - [Testing an Endpoint](#testing-an-endpoint)
-    - [Creating a Reactive Function](#creating-a-reactive-function)
-    - [Testing out a Reactive Function](#testing-out-a-reactive-function)
+    - [Restful Functions (Endpoints)](#restful-functions-endpoints)
+    - [Reactive Functions](#reactive-functions)
     - [Environment Setup](#environment-setup)
     - [Deploy](#deploy)
   - [Author](#author)
@@ -72,6 +70,21 @@ to go over.
 3. The backend will be split into different resource groups to ensure a
    structured backend in production
 
+Organize your `firebase functions` folder into api domain folders (`groups`) and function type (`reactive`, `restful`).
+
+```
+src
+  {group_name_folder}
+    reactive
+      - onSomeTrigger.function.ts
+      - onSomeOtherTrigger.function.ts
+    restful
+      - someEndpointName.endpoint.ts
+      - someOtherEndpointName.endpoint.ts
+  - index.ts
+package.json
+```
+
 ## Code Setup
 
 ### Installation
@@ -97,22 +110,25 @@ These are the two magical lines of code that allows us to dynamically add and
 export functions as the backend grows without ever changing the index file 🥳.
 And that's also all we need to set it up. Now we can start creating functions 😎
 
-### Creating an Http Endpoint
+### Restful Functions (Endpoints)
 
-Lets start with something familiar. Creating a RESTful endpoint on our backend.
-We'll start by creating a folder (resource group) called `users`. In this folder
-we'll create another folder called `restful`. Then we'll create a new file
-called `addPaymentMethod.endpoint.ts`. For any endpoint the file has to end in
-`.endpoint.ts` if it doesn't then it won't be loaded as an http endpoint.
+**Create**
 
-Inside that file we'll import `Request` and `Response` from express as well as
-`Endpoint` and `RequestType` from `firebase-backend`. Then we'll construct and
-export a new post endpoint with some made up logic.
+Let's say we wanted to make an endpoint where a client application could add a payment method for a user.
+
+- The API would be called `users`
+- The function would be called `addPaymentMethod`
+- The file would be called `src/users/restful/addPaymentMethod.endpoint.ts`
+- The endpoint name will be exactly the name of your file
+- The `endpoint.ts` file extension identifies the function as an HTTP endpoint
 
 ```ts
-import { Request, Response } from 'express';
-import { Endpoint, RequestType } from 'firebase-backend';
+// src/users/restful/addPaymentMethod.endpoint.ts
+import { Request, Response } from 'express'
+import { Post } from 'firebase-backend' // Get, Post, Put, Update, Delete available
 
+
+// Use the `Post` class which is extended from the `Endpoint` class.
 export default new Post((request: Request, response: Response) => {
   // Read the values out of the body
   const cardNumber = request.body['card_number'];
@@ -128,12 +144,7 @@ export default new Post((request: Request, response: Response) => {
 });
 ```
 
-As you can see there's not a lot of code required to setup an endpoint. We
-construct a new `Endpoint` using the `Post` class which is extended from the
-`Endpoint` class. The endpoint name will be exactly the name of your file. So
-name it what you want your endpoint to be.
-
-### Testing an Endpoint
+**Testing**
 
 To test this out we'll run the following command in the functions folder.
 
@@ -174,18 +185,25 @@ When we execute this we get back the token in the format we supplied
 
 There we have it, your first endpoint created. Next up is reactive functions.
 
-### Creating a Reactive Function
+### Reactive Functions
 
-To demonstrate this we'll add a function that will fire when a new user is
-created in the firestore db. Create a new folder in the users folder called
-`reactive`. Inside that folder create a new file called
-`onUserCreated.function.ts` . The part `.function.ts` is very important. That's
-how we know which file to load as a reactive function.
+**Create**
+
+Let's say we wanted to make a function that would run when the firestore db had a user record updated.
+
+- The API would be called `users`
+- The function would be called `onUserCreated`
+- The file would be called `src/users/reactive/onUserCreated.function.ts`
+- The endpoint name will be exactly the name of your file
+- The `function.ts` file extension identifies the function as reactive
 
 ```ts
+
+// src/users/reactive/onUserCreated.function.ts
 import * as functions from 'firebase-functions';
 
-exports.onUserCreated = functions.firestore
+
+export default functions.firestore
   .document('users/{userId}')
   .onCreate((userSnapshot, context) => {
     const data = userSnapshot.data();
@@ -193,13 +211,13 @@ exports.onUserCreated = functions.firestore
   });
 ```
 
-Then we'll run `npm run build` in the functions folder. And after that we'll run
-`firebase emulators:start`. You should now see something like this printed out.
+Run `npm run build` in the functions folder. Then run `firebase emulators:start`.
+
 You should now have a function deployed at `users-onUserCreated` as well as at
 `users-api`. All the api endpoints go under the one api function, but the
 reactive functions are added as their own functions. Lets test this out.
 
-### Testing out a Reactive Function
+**Testing**
 
 At the bottom of your logs you'll see a link to firestore
 <http://localhost:4000/firestore> . Open that in your browser. You'll see an
