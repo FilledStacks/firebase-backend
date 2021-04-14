@@ -101,9 +101,9 @@ npm install firebase-backend
 Then you can open the index.ts file in your source folder and update it to
 
 ```ts
-import { FunctionParser } from 'firebase-backend'
+import { FunctionParser } from 'firebase-backend';
 
-exports = new FunctionParser(__dirname, exports).exports
+exports = new FunctionParser(__dirname, exports).exports;
 ```
 
 These are the two magical lines of code that allows us to dynamically add and
@@ -127,20 +127,21 @@ Let's say we wanted to make an endpoint where a client application could add a p
 import { Request, Response } from 'express'
 import { Post } from 'firebase-backend' // Get, Post, Put, Update, Delete available
 
+
 // Use the `Post` class which is extended from the `Endpoint` class.
 export default new Post((request: Request, response: Response) => {
   // Read the values out of the body
-  const cardNumber = request.body['card_number']
-  const cardHolder = request.body['card_holder']
+  const cardNumber = request.body['card_number'];
+  const cardHolder = request.body['card_holder'];
 
   // Do your thing with the values
-  var paymentToken = `${cardNumber}_${cardHolder}`
+  var paymentToken = `${cardNumber}_${cardHolder}`;
 
   // Send your response. 201 to indicate the creation of a new resource
   return response.status(201).send({
-    token: paymentToken
-  })
-})
+    token: paymentToken,
+  });
+});
 ```
 
 **Testing**
@@ -197,15 +198,17 @@ Let's say we wanted to make a function that would run when the firestore db had 
 - The `function.ts` file extension identifies the function as reactive
 
 ```ts
+
 // src/users/reactive/onUserCreated.function.ts
-import * as functions from 'firebase-functions'
+import * as functions from 'firebase-functions';
+
 
 export default functions.firestore
   .document('users/{userId}')
   .onCreate((userSnapshot, context) => {
-    const data = userSnapshot.data()
-    console.log(`User Created | send an email to ${data.email}`)
-  })
+    const data = userSnapshot.data();
+    console.log(`User Created | send an email to ${data.email}`);
+  });
 ```
 
 Run `npm run build` in the functions folder. Then run `firebase emulators:start`.

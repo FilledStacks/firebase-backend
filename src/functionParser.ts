@@ -10,10 +10,11 @@ import { Endpoint, RequestType } from './models';
 const { log } = console;
 
 /**
- * This class helps with setting sup the exports for the cloud functions deployment.
+ * This class helps with setting up
+ * the exports for the cloud functions deployment.
  *
- * It takes in exports and then adds the required groups and their functions to it for deployment
- * to the cloud functions server.
+ * It takes in exports and then adds the required groups
+ * and their functions to it for deployment to the cloud functions server.
  *
  * @export
  * @class FunctionParser
@@ -38,7 +39,7 @@ export class FunctionParser {
     exports: any,
     buildReactive: boolean = true,
     buildEndpoints: boolean = true,
-    groupByFolder: boolean = true,
+    groupByFolder: boolean = true
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -57,7 +58,8 @@ export class FunctionParser {
   }
 
   /**
-   * Looks for all files with .function.js and exports them on the group they belong to
+   * Looks for all files with .function.js
+   * and exports them on the group they belong to
    *
    * @private
    * @param {boolean} groupByFolder
@@ -72,7 +74,7 @@ export class FunctionParser {
       {
         cwd: this.rootPath,
         ignore: './node_modules/**',
-      },
+      }
     );
 
     functionFiles.forEach((file: string) => {
@@ -143,7 +145,8 @@ export class FunctionParser {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
         throw new Error(
-          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
+          `Restful Endpoints - Failed to add the endpoint defined in
+          ${file} to the ${groupName} API.`
         );
       }
 
@@ -167,6 +170,7 @@ export class FunctionParser {
 
   /**
    * Returns options object from endpoint file
+   *
    * @param {string} file
    * @returns Endpoint.options | undefined
    * @memberof FunctionParser
@@ -176,7 +180,8 @@ export class FunctionParser {
   }
 
   /**
-   * Parses a .endpoint.js file and sets the endpoint path on the provided router
+   * Parses a .endpoint.js file
+   * and sets the endpoint path on the provided router
    *
    * @private
    * @param {string} file
@@ -186,7 +191,7 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router,
+    router: express.Router
   ) {
     const filePath: ParsedPath = parse(file);
 
@@ -223,11 +228,11 @@ export class FunctionParser {
           `A unsupported RequestType was defined for a Endpoint.\n
           Please make sure that the Endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          **This value is required to add the Endpoint to the API**`,
+          **This value is required to add the Endpoint to the API**`
         );
     }
     log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
     );
   }
 }
