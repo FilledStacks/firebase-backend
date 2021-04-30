@@ -26,7 +26,7 @@
 
 ## Requirements
 
-- node >=10
+- node >=12
 
 ## Overview
 
