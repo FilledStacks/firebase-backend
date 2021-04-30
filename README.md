@@ -34,6 +34,10 @@ Let's to start out by going through a high level overview of how the backend
 will be setup. This overview will go over the types of functions we use as well
 as the actual code structure.
 
+## As Seen on [Fireship](https://youtu.be/W_VV2Fx32_Y)
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/W_VV2Fx32_Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ### Types of Functions
 
 The backend is built around the strengths that firebase poses in their
