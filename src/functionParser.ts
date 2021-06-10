@@ -1,6 +1,7 @@
 // functionParser.ts
 
 import express, { Application, Router } from 'express';
+import fileUpload from 'express-fileupload';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
 import cors from 'cors';
@@ -192,6 +193,11 @@ export class FunctionParser {
     else if (endpoint.options?.enableCors) {
       log(`Cors enabled for ${name}`);
       router.use(cors());
+    }
+
+    if (endpoint.options?.enableFileUpload) {
+      log(`File upload enabled for ${name}`);
+      router.use(fileUpload());
     }
 
     switch (endpoint.requestType) {
