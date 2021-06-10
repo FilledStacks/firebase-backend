@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Makes `EndpointOptions` optional
+
 ## 0.2.1
 
 - Adds `express-fileupload` as an option that can be enabled per endpoint through `EndpointOptions`

@@ -36,8 +36,8 @@ export interface ParserOptions {
  * @interface EndpointOptions
  */
 export interface EndpointOptions {
-  enableCors: boolean;
-  enableFileUpload: boolean;
+  enableCors?: boolean;
+  enableFileUpload?: boolean;
 }
 
 /**
