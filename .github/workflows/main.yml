@@ -6,6 +6,7 @@ on:
   pull_request:
   workflow_dispatch:
 
+# define job name and sequence
 jobs:
   build:
     name: Build, Test, and Lint
@@ -21,7 +22,8 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      # setup nodejs
+      - name: Use Node.js 14 LTS
         uses: actions/setup-node@v2
         with:
           node-version: 14 # latest LTS version
@@ -48,7 +50,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # archive production artifact for build step
+      # archive production artifact
       - name: Archive
         uses: actions/upload-artifact@v2
         with:

@@ -17,7 +17,7 @@
 
 ## 0.1.2
 
-- Adds recommended grouping boolean to `FunctionParser` constructor. This will allow the api's to be grouped under their intended resources as the structure recommends.
+- Adds recommended grouping boolean to `FunctionParser` constructor. This will allow the API's to be grouped under their intended resources as the structure recommends.
 
 ## 0.1.1
 
