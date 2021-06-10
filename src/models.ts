@@ -1,5 +1,4 @@
 // models.ts
-import { RuntimeOptions } from 'firebase-functions';
 
 /**
  * @export
@@ -21,8 +20,23 @@ export interface IExpressHandler {
   (req: any, res: any): any;
 }
 
+/**
+ * @export
+ * @interface ParserOptions
+ */
+export interface ParserOptions {
+  enableCors?: boolean;
+  buildReactive?: boolean;
+  buildEndpoints?: boolean;
+  groupByFolder?: boolean;
+}
+
+/**
+ * @export
+ * @interface EndpointOptions
+ */
 export interface EndpointOptions {
-  runWith: RuntimeOptions;
+  enableCors: boolean;
 }
 
 /**
@@ -38,6 +52,7 @@ export class Endpoint {
    * @param {string} name
    * @param {RequestType} requestType
    * @param {IExpressHandler} handler
+   * @param {EndpointOptions} options
    * @memberof Endpoint
    */
   constructor(
@@ -47,7 +62,7 @@ export class Endpoint {
     public name: string | undefined,
     public requestType: RequestType,
     public handler: IExpressHandler,
-    public options?: EndpointOptions
+    public options?: EndpointOptions,
   ) {
     if (!handler) {
       throw new Error('Please provide a endpoint request handler.');
@@ -56,6 +71,7 @@ export class Endpoint {
     this.name = name;
     this.handler = handler;
     this.requestType = requestType;
+    this.options = options;
   }
 }
 

@@ -3,24 +3,26 @@
 import express, { Application, Router } from 'express';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
+import cors from 'cors';
 import { parse, ParsedPath } from 'path';
-import { Endpoint, RequestType } from './models';
+import { Endpoint, ParserOptions, RequestType } from './models';
 
 // enable short hand for console.log()
 const { log } = console;
 
 /**
- * This class helps with setting up
- * the exports for the cloud functions deployment.
+ * This class helps with setting sup the exports for the cloud functions deployment.
  *
- * It takes in exports and then adds the required groups
- * and their functions to it for deployment to the cloud functions server.
+ * It takes in exports and then adds the required groups and their functions to it for deployment
+ * to the cloud functions server.
  *
  * @export
  * @class FunctionParser
  */
 export class FunctionParser {
   rootPath: string;
+
+  enableCors: boolean;
 
   exports: any;
 
@@ -29,17 +31,13 @@ export class FunctionParser {
    *
    * @param {string} rootPath
    * @param {*} exports
-   * @param {boolean} [buildReactive=true]
-   * @param {boolean} [buildEndpoints=true]
-   * @param {boolean} [groupByFolder=true]
+   * @param {ParserOptions} [options]
    * @memberof FunctionParser
    */
   constructor(
     rootPath: string,
     exports: any,
-    buildReactive: boolean = true,
-    buildEndpoints: boolean = true,
-    groupByFolder: boolean = true
+    options?: ParserOptions
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -47,6 +45,12 @@ export class FunctionParser {
 
     this.rootPath = rootPath;
     this.exports = exports;
+
+    // Set default option values for if not provided
+    this.enableCors = options?.enableCors ?? false;
+    let groupByFolder: boolean = options?.groupByFolder ?? true;
+    let buildReactive: boolean = options?.buildReactive ?? true;
+    let buildEndpoints: boolean = options?.buildEndpoints ?? true;
 
     if (buildReactive) {
       this.buildReactiveFunctions(groupByFolder);
@@ -58,8 +62,7 @@ export class FunctionParser {
   }
 
   /**
-   * Looks for all files with .function.js
-   * and exports them on the group they belong to
+   * Looks for all files with .function.js and exports them on the group they belong to
    *
    * @private
    * @param {boolean} groupByFolder
@@ -74,7 +77,7 @@ export class FunctionParser {
       {
         cwd: this.rootPath,
         ignore: './node_modules/**',
-      }
+      },
     );
 
     functionFiles.forEach((file: string) => {
@@ -145,23 +148,15 @@ export class FunctionParser {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
         throw new Error(
-          `Restful Endpoints - Failed to add the endpoint defined in
-          ${file} to the ${groupName} API.`
+          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
         );
       }
 
       app.use('/', router);
 
-      // handle options
-      const options = this.getOptions(file);
-      const api = options?.runWith
-        ? functions.runWith(options.runWith).https.onRequest(app)
-        : functions.https.onRequest(app);
-
-      // attach to exports
       this.exports[groupName] = {
         ...this.exports[groupName],
-        api,
+        api: functions.https.onRequest(app),
       };
     });
 
@@ -169,19 +164,7 @@ export class FunctionParser {
   }
 
   /**
-   * Returns options object from endpoint file
-   *
-   * @param {string} file
-   * @returns Endpoint.options | undefined
-   * @memberof FunctionParser
-   */
-  private getOptions(file: string) {
-    return (require(file).default as Endpoint).options;
-  }
-
-  /**
-   * Parses a .endpoint.js file
-   * and sets the endpoint path on the provided router
+   * Parses a .endpoint.js file and sets the endpoint path on the provided router
    *
    * @private
    * @param {string} file
@@ -191,7 +174,7 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router
+    router: express.Router,
   ) {
     const filePath: ParsedPath = parse(file);
 
@@ -201,6 +184,15 @@ export class FunctionParser {
       endpoint.name || filePath.name.replace('.endpoint', '');
 
     const { handler } = endpoint;
+
+    // Enable cors if it is enabled globally else only enable it for a particular route
+    if (this.enableCors) {
+      router.use(cors());
+    }
+    else if (endpoint.options?.enableCors) {
+      log(`Cors enabled for ${name}`);
+      router.use(cors());
+    }
 
     switch (endpoint.requestType) {
       case RequestType.GET:
@@ -228,11 +220,11 @@ export class FunctionParser {
           `A unsupported RequestType was defined for a Endpoint.\n
           Please make sure that the Endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          **This value is required to add the Endpoint to the API**`
+          **This value is required to add the Endpoint to the API**`,
         );
     }
     log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
+      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
     );
   }
 }
