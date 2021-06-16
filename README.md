@@ -124,9 +124,8 @@ Let's say we wanted to make an endpoint where a client application could add a p
 
 ```ts
 // src/users/restful/addPaymentMethod.endpoint.ts
-import { Request, Response } from 'express'
-import { Post } from 'firebase-backend' // Get, Post, Put, Update, Delete available
-
+import { Request, Response } from 'express';
+import { Post } from 'firebase-backend'; // Get, Post, Put, Update, Delete available
 
 // Use the `Post` class which is extended from the `Endpoint` class.
 export default new Post((request: Request, response: Response) => {
@@ -198,10 +197,8 @@ Let's say we wanted to make a function that would run when the firestore db had 
 - The `function.ts` file extension identifies the function as reactive
 
 ```ts
-
 // src/users/reactive/onUserCreated.function.ts
 import * as functions from 'firebase-functions';
-
 
 export default functions.firestore
   .document('users/{userId}')
