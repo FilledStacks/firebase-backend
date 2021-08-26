@@ -144,6 +144,24 @@ export default new Post((request: Request, response: Response) => {
 });
 ```
 
+**Middleware**
+You can now pass an array of middleware you'd want to add to an endpoint:
+
+``` ts
+// src/users/restful/auth.middleware.ts
+import { Request, Response, NextFunction } from 'express'
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => { ... }
+
+// src/users/restful/addPaymentMethod.endpoint.ts
+import { Request, Response } from 'express'
+import { EndpointMiddleware, Post } from 'firebase-backend'
+import { authMiddleware } from './auth.middleware'
+
+export default new Post((req: Request, res: Response) => {}, {
+  middlewares: [authMiddleware]
+})
+```
+
 **Testing**
 
 To test this out we'll run the following command in the functions folder.
