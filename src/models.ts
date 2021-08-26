@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 // models.ts
 
 /**
@@ -33,11 +34,18 @@ export interface ParserOptions {
 
 /**
  * @export
+ * @type EndpointMiddleware
+ */
+export type EndpointMiddleware = (req: Request, res: Response, next: NextFunction) => any;
+
+/**
+ * @export
  * @interface EndpointOptions
  */
 export interface EndpointOptions {
   enableCors?: boolean;
   enableFileUpload?: boolean;
+  middlewares?: EndpointMiddleware[]
 }
 
 /**

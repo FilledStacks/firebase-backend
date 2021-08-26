@@ -199,6 +199,12 @@ export class FunctionParser {
       log(`File upload enabled for ${name}`);
       router.use(fileUpload());
     }
+    
+    if (endpoint.options?.middlewares) {
+      endpoint.options?.middlewares.forEach(middleware => {
+        router.use(middleware);
+      });
+    }
 
     switch (endpoint.requestType) {
       case RequestType.GET:
