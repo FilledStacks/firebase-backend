@@ -199,32 +199,26 @@ export class FunctionParser {
       log(`File upload enabled for ${name}`);
       router.use(fileUpload());
     }
-    
-    if (endpoint.options?.middlewares) {
-      endpoint.options?.middlewares.forEach(middleware => {
-        router.use(middleware);
-      });
-    }
 
     switch (endpoint.requestType) {
       case RequestType.GET:
-        router.get(`/${name}`, handler);
+        router.get(`/${name}`, endpoint.options?.middlewares ?? [], handler);
         break;
 
       case RequestType.POST:
-        router.post(`/${name}`, handler);
+        router.post(`/${name}`, endpoint.options?.middlewares ?? [], handler);
         break;
 
       case RequestType.PUT:
-        router.put(`/${name}`, handler);
+        router.put(`/${name}`, endpoint.options?.middlewares ?? [], handler);
         break;
 
       case RequestType.DELETE:
-        router.delete(`/${name}`, handler);
+        router.delete(`/${name}`, endpoint.options?.middlewares ?? [], handler);
         break;
 
       case RequestType.PATCH:
-        router.patch(`/${name}`, handler);
+        router.patch(`/${name}`, endpoint.options?.middlewares ?? [], handler);
         break;
 
       default:
