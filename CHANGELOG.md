@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+- Adds the ability to pass middlewares to an endpoint
+
 ## 0.2.2
 
 - Makes `EndpointOptions` optional
