@@ -112,7 +112,7 @@ And that's also all we need to set it up. Now we can start creating functions ðŸ
 
 #### Add a prefixed deployment
 
-If you want to prefix all the generated cloud functions, for versioning, or for any use case, you can look these lines.
+If you want to prefix all the generated cloud functions, for versioning, or for any use case, see the example below. This will add the version v2_ infront of all deployed functions keeping your previously deployed functions in tact.
 
 ```ts
 import { FunctionParser } from 'firebase-backend';
