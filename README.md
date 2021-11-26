@@ -110,6 +110,26 @@ These are the two magical lines of code that allows us to dynamically add and
 export functions as the backend grows without ever changing the index file 🥳.
 And that's also all we need to set it up. Now we can start creating functions 😎
 
+#### Add a prefixed deployment
+
+If you want to prefix all the generated cloud functions, for versioning, or for any use case, you can look these lines.
+
+```ts
+import { FunctionParser } from 'firebase-backend';
+
+exports = new FunctionParser(__dirname, exports).exports;
+
+const backendVersion = 'v2';
+const seperator = '_';
+
+for (const key in exports) {
+  if (Object.prototype.hasOwnProperty.call(exports, key)) {
+    exports[`${backendVersion}${seperator}${key}`] = exports[key];
+    delete exports[key];
+  }
+}
+```
+
 ### Restful Functions (Endpoints)
 
 **Create**
@@ -124,9 +144,8 @@ Let's say we wanted to make an endpoint where a client application could add a p
 
 ```ts
 // src/users/restful/addPaymentMethod.endpoint.ts
-import { Request, Response } from 'express'
-import { Post } from 'firebase-backend' // Get, Post, Put, Update, Delete available
-
+import { Request, Response } from 'express';
+import { Post } from 'firebase-backend'; // Get, Post, Put, Update, Delete available
 
 // Use the `Post` class which is extended from the `Endpoint` class.
 export default new Post((request: Request, response: Response) => {
@@ -147,7 +166,7 @@ export default new Post((request: Request, response: Response) => {
 **Middleware**
 You can now pass an array of middleware you'd want to add to an endpoint:
 
-``` ts
+```ts
 // src/users/restful/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express'
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => { ... }
@@ -216,10 +235,8 @@ Let's say we wanted to make a function that would run when the firestore db had 
 - The `function.ts` file extension identifies the function as reactive
 
 ```ts
-
 // src/users/reactive/onUserCreated.function.ts
 import * as functions from 'firebase-functions';
-
 
 export default functions.firestore
   .document('users/{userId}')
