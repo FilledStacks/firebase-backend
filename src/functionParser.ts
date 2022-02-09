@@ -10,7 +10,14 @@ import { Endpoint, ParserOptions, RequestType } from './models';
 
 // enable short hand for console.log()
 const { log } = console;
-
+/**
+ * Config for the {@link FunctionParser} constructor
+ */ interface FunctionParserOptions {
+  rootPath: string;
+  exports: any;
+  options?: ParserOptions;
+  verbose?: boolean;
+}
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
  *
@@ -30,19 +37,11 @@ export class FunctionParser {
   verbose: boolean;
   /**
    * Creates an instance of FunctionParser.
-   *
-   * @param {string} rootPath
-   * @param {*} exports
-   * @param {ParserOptions} [options]
-   * @param {boolean} [verbose]
+   * @param {FunctionParserOptions} [config]
    * @memberof FunctionParser
    */
-  constructor(
-    rootPath: string,
-    exports: any,
-    options?: ParserOptions,
-    verbose: boolean = false
-  ) {
+  constructor(props: FunctionParserOptions) {
+    const { rootPath, exports, options, verbose = false } = props;
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }

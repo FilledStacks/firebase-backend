@@ -103,7 +103,8 @@ Then you can open the index.ts file in your source folder and update it to
 ```ts
 import { FunctionParser } from 'firebase-backend';
 
-exports = new FunctionParser(__dirname, exports).exports;
+exports = new FunctionParser({ rootPath: __dirname, exports, verbose: true })
+  .exports;
 ```
 
 These are the two magical lines of code that allows us to dynamically add and
@@ -112,7 +113,7 @@ And that's also all we need to set it up. Now we can start creating functions ðŸ
 
 #### Add a prefixed deployment
 
-If you want to prefix all the generated cloud functions, for versioning, or for any use case, see the example below. This will add the version v2_ infront of all deployed functions keeping your previously deployed functions in tact.
+If you want to prefix all the generated cloud functions, for versioning, or for any use case, see the example below. This will add the version v2\_ infront of all deployed functions keeping your previously deployed functions in tact.
 
 ```ts
 import { FunctionParser } from 'firebase-backend';
