@@ -1,10 +1,10 @@
 // functionParser.ts
 
+import cors from 'cors';
 import express, { Application, Router } from 'express';
 import fileUpload from 'express-fileupload';
 import * as functions from 'firebase-functions';
 import glob from 'glob';
-import cors from 'cors';
 import { parse, ParsedPath } from 'path';
 import { Endpoint, ParserOptions, RequestType } from './models';
 
@@ -27,18 +27,21 @@ export class FunctionParser {
 
   exports: any;
 
+  verbose: boolean;
   /**
    * Creates an instance of FunctionParser.
    *
    * @param {string} rootPath
    * @param {*} exports
    * @param {ParserOptions} [options]
+   * @param {boolean} [verbose]
    * @memberof FunctionParser
    */
   constructor(
     rootPath: string,
     exports: any,
-    options?: ParserOptions
+    options?: ParserOptions,
+    verbose: boolean = false
   ) {
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
@@ -46,7 +49,7 @@ export class FunctionParser {
 
     this.rootPath = rootPath;
     this.exports = exports;
-
+    this.verbose = verbose;
     // Set default option values for if not provided
     this.enableCors = options?.enableCors ?? false;
     let groupByFolder: boolean = options?.groupByFolder ?? true;
@@ -70,7 +73,7 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildReactiveFunctions(groupByFolder: boolean) {
-    log('Reactive Functions - Building...');
+    if (this.verbose) log('Reactive Functions - Building...');
 
     // Get all the files that has .function in the file name
     const functionFiles: string[] = glob.sync(
@@ -78,7 +81,7 @@ export class FunctionParser {
       {
         cwd: this.rootPath,
         ignore: './node_modules/**',
-      },
+      }
     );
 
     functionFiles.forEach((file: string) => {
@@ -97,7 +100,8 @@ export class FunctionParser {
         process.env.FUNCTION_NAME === functionName
       ) {
         if (!this.exports[groupName]) this.exports[groupName] = {};
-        log(`Reactive Functions - Added ${groupName}/${functionName}`);
+        if (this.verbose)
+          log(`Reactive Functions - Added ${groupName}/${functionName}`);
 
         this.exports[groupName] = {
           ...this.exports[groupName],
@@ -105,8 +109,7 @@ export class FunctionParser {
         };
       }
     });
-
-    log('Reactive Functions - Built');
+    if (this.verbose) log('Reactive Functions - Built');
   }
 
   /**
@@ -117,7 +120,7 @@ export class FunctionParser {
    * @memberof FunctionParser
    */
   private buildRestfulApi(groupByFolder: boolean) {
-    log('Restful Endpoints - Building...');
+    if (this.verbose) log('Restful Endpoints - Building...');
 
     const apiFiles: string[] = glob.sync(`${this.rootPath}/**/*.endpoint.js`, {
       cwd: this.rootPath,
@@ -149,7 +152,7 @@ export class FunctionParser {
         this.buildEndpoint(file, groupName, router);
       } catch (e) {
         throw new Error(
-          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`,
+          `Restful Endpoints - Failed to add the endpoint defined in ${file} to the ${groupName} Api.`
         );
       }
 
@@ -161,7 +164,7 @@ export class FunctionParser {
       };
     });
 
-    log('Restful Endpoints - Built');
+    if (this.verbose) log('Restful Endpoints - Built');
   }
 
   /**
@@ -175,7 +178,7 @@ export class FunctionParser {
   private buildEndpoint(
     file: string,
     groupName: string,
-    router: express.Router,
+    router: express.Router
   ) {
     const filePath: ParsedPath = parse(file);
 
@@ -189,14 +192,13 @@ export class FunctionParser {
     // Enable cors if it is enabled globally else only enable it for a particular route
     if (this.enableCors) {
       router.use(cors());
-    }
-    else if (endpoint.options?.enableCors) {
-      log(`Cors enabled for ${name}`);
+    } else if (endpoint.options?.enableCors) {
+      if (this.verbose) log(`Cors enabled for ${name}`);
       router.use(cors());
     }
 
     if (endpoint.options?.enableFileUpload) {
-      log(`File upload enabled for ${name}`);
+      if (this.verbose) log(`File upload enabled for ${name}`);
       router.use(fileUpload());
     }
 
@@ -226,11 +228,12 @@ export class FunctionParser {
           `A unsupported RequestType was defined for a Endpoint.\n
           Please make sure that the Endpoint file exports a RequestType
           using the constants in src/system/constants/requests.ts.\n
-          **This value is required to add the Endpoint to the API**`,
+          **This value is required to add the Endpoint to the API**`
         );
     }
-    log(
-      `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`,
-    );
+    if (this.verbose)
+      log(
+        `Restful Endpoints - Added ${groupName}/${endpoint.requestType}:${name}`
+      );
   }
 }
