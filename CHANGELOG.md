@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5
+
+- Adds `verbose` flag to hide logs in production mode
+- Refactor `FunctionsParser` options to use named parameters
+
 ## 0.2.4
 
 - Adds the ability to pass middlewares to an endpoint
