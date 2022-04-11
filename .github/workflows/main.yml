@@ -52,7 +52,7 @@ jobs:
 
       # archive production artifact
       - name: Archive
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build-artifact
           path: dist
