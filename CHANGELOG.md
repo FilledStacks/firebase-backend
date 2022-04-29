@@ -2,6 +2,10 @@
 
 ## 0.2.5
 
+- Adds support for region selection for restful functions
+
+## 0.2.5
+
 - Adds `verbose` flag to hide logs in production mode
 - Refactor `FunctionsParser` options to use named parameters
 

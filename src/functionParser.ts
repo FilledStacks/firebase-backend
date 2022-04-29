@@ -17,6 +17,7 @@ const { log } = console;
   exports: any;
   options?: ParserOptions;
   verbose?: boolean;
+  region?: string;
 }
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -35,13 +36,21 @@ export class FunctionParser {
   exports: any;
 
   verbose: boolean;
+
+  region: string;
   /**
    * Creates an instance of FunctionParser.
    * @param {FunctionParserOptions} [config]
    * @memberof FunctionParser
    */
   constructor(props: FunctionParserOptions) {
-    const { rootPath, exports, options, verbose = false } = props;
+    const {
+      rootPath,
+      exports,
+      options,
+      verbose = false,
+      region = 'us-central1',
+    } = props;
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }
@@ -49,6 +58,7 @@ export class FunctionParser {
     this.rootPath = rootPath;
     this.exports = exports;
     this.verbose = verbose;
+    this.region = region;
     // Set default option values for if not provided
     this.enableCors = options?.enableCors ?? false;
     let groupByFolder: boolean = options?.groupByFolder ?? true;
@@ -159,7 +169,7 @@ export class FunctionParser {
 
       this.exports[groupName] = {
         ...this.exports[groupName],
-        api: functions.https.onRequest(app),
+        api: functions.region(this.region).https.onRequest(app),
       };
     });
 
