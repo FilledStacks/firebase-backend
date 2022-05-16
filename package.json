@@ -71,7 +71,7 @@
     "express-fileupload": "^1.2.1",
     "firebase-admin": "^9.6.0",
     "firebase-functions": "^3.13.2",
-    "glob": "^7.1.6"
+    "glob": "^8.0.3"
   },
   "homepage": "https://github.com/filledstacks/firebase-backend#readme",
   "repository": "git://github.com/filledstacks/firebase-backend.git",
