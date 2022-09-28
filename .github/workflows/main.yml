@@ -24,7 +24,7 @@ jobs:
 
       # setup nodejs
       - name: Use Node.js 14 LTS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3.5.0
         with:
           node-version: 14 # latest LTS version
 
