@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.6
+
+- Adds `region` support
+
 ## 0.2.5
 
 - Adds `verbose` flag to hide logs in production mode

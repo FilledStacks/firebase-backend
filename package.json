@@ -1,5 +1,5 @@
 {
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",

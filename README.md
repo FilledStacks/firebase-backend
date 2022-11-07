@@ -103,7 +103,7 @@ Then you can open the index.ts file in your source folder and update it to
 ```ts
 import { FunctionParser } from 'firebase-backend';
 
-exports = new FunctionParser({ rootPath: __dirname, exports, verbose: true })
+exports = new FunctionParser({ rootPath: __dirname, exports, verbose: true, regions: ['europe-west1','us-central1'] });
   .exports;
 ```
 
