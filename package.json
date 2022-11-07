@@ -1,5 +1,5 @@
 {
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A package that helps with the management and expansion of a maintainable firebase backend",
   "license": "MIT",
   "main": "dist/index.js",
@@ -63,15 +63,15 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@types/cors": "^2.8.10",
+    "@types/cors": "^2.8.12",
     "@types/express-fileupload": "^1.1.6",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.19.2",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-fileupload": "^1.2.1",
-    "firebase-admin": "^9.6.0",
-    "firebase-functions": "^3.13.2",
-    "glob": "^7.1.6"
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.20.0",
+    "glob": "^7.2.0"
   },
   "homepage": "https://github.com/filledstacks/firebase-backend#readme",
   "repository": "git://github.com/filledstacks/firebase-backend.git",

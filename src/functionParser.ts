@@ -4,6 +4,7 @@ import cors from 'cors';
 import express, { Application, Router } from 'express';
 import fileUpload from 'express-fileupload';
 import * as functions from 'firebase-functions';
+import { SUPPORTED_REGIONS } from 'firebase-functions';
 import glob from 'glob';
 import { parse, ParsedPath } from 'path';
 import { Endpoint, ParserOptions, RequestType } from './models';
@@ -17,6 +18,7 @@ const { log } = console;
   exports: any;
   options?: ParserOptions;
   verbose?: boolean;
+  regions?: Array<typeof SUPPORTED_REGIONS[number] | string>;
 }
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -35,13 +37,21 @@ export class FunctionParser {
   exports: any;
 
   verbose: boolean;
+
+  regions: Array<typeof SUPPORTED_REGIONS[number] | string>;
   /**
    * Creates an instance of FunctionParser.
    * @param {FunctionParserOptions} [config]
    * @memberof FunctionParser
    */
   constructor(props: FunctionParserOptions) {
-    const { rootPath, exports, options, verbose = false } = props;
+    const {
+      rootPath,
+      exports,
+      options,
+      verbose = false,
+      regions = ['us-central1'],
+    } = props;
     if (!rootPath) {
       throw new Error('rootPath is required to find the functions.');
     }
@@ -49,6 +59,7 @@ export class FunctionParser {
     this.rootPath = rootPath;
     this.exports = exports;
     this.verbose = verbose;
+    this.regions = regions;
     // Set default option values for if not provided
     this.enableCors = options?.enableCors ?? false;
     let groupByFolder: boolean = options?.groupByFolder ?? true;
@@ -159,7 +170,7 @@ export class FunctionParser {
 
       this.exports[groupName] = {
         ...this.exports[groupName],
-        api: functions.https.onRequest(app),
+        api: functions.region(...this.regions).https.onRequest(app),
       };
     });
 
