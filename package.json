@@ -74,7 +74,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.1",
-    "firebase-admin": "^11.10.1",
+    "firebase-admin": "^11.11.0",
     "firebase-functions": "^4.4.1",
     "glob": "^8.1.0"
   },
