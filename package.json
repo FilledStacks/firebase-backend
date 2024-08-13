@@ -73,7 +73,7 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "express-fileupload": "^1.5.0",
+    "express-fileupload": "^1.5.1",
     "firebase-admin": "^12.2.0",
     "firebase-functions": "^4.9.0",
     "glob": "^8.1.0"
