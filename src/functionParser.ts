@@ -1,10 +1,10 @@
 // functionParser.ts
 
 import cors from 'cors';
-import express, { Application, Router } from 'express';
+import express from 'express';
 import fileUpload from 'express-fileupload';
 import * as functions from 'firebase-functions';
-import { SUPPORTED_REGIONS } from 'firebase-functions';
+import { SupportedRegion } from 'firebase-functions';
 import glob from 'glob';
 import { parse, ParsedPath } from 'path';
 import { Endpoint, ParserOptions, RequestType } from './models';
@@ -18,7 +18,7 @@ const { log } = console;
   exports: any;
   options?: ParserOptions;
   verbose?: boolean;
-  regions?: Array<typeof SUPPORTED_REGIONS[number] | string>;
+  regions?: Array<SupportedRegion>;
 }
 /**
  * This class helps with setting sup the exports for the cloud functions deployment.
@@ -38,7 +38,7 @@ export class FunctionParser {
 
   verbose: boolean;
 
-  regions: Array<typeof SUPPORTED_REGIONS[number] | string>;
+  regions: Array<SupportedRegion>;
   /**
    * Creates an instance of FunctionParser.
    * @param {FunctionParserOptions} [config]
@@ -137,7 +137,7 @@ export class FunctionParser {
       ignore: './node_modules/**',
     });
 
-    const app: Application = express();
+    const app = express();
 
     const groupRouters: Map<string, express.Router> = new Map();
 
@@ -150,11 +150,11 @@ export class FunctionParser {
         ? directories[directories.length - 2] || ''
         : directories[directories.length - 1] || '';
 
-      let router: Router | undefined = groupRouters.get(groupName);
+      // Get or create router for this group
+      let router = groupRouters.get(groupName) || express.Router();
 
-      if (!router) {
-        router = express.Router();
-
+      // Make sure to set the router in the map if it's new
+      if (!groupRouters.has(groupName)) {
         groupRouters.set(groupName, router);
       }
 
@@ -170,7 +170,7 @@ export class FunctionParser {
 
       this.exports[groupName] = {
         ...this.exports[groupName],
-        api: functions.region(...this.regions).https.onRequest(app),
+        api: functions.https.onRequest(app),
       };
     });
 
